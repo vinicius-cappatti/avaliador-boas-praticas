@@ -1,5 +1,5 @@
 from google import genai
-from config import GEMINI_MODEL, PROMPT_CHECKLIST
+from config import GEMINI_MODEL
 import os
 from google import genai
 

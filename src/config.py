@@ -1,4 +1,4 @@
-GEMINI_MODEL ="gemini-2.5-flash"
+GEMINI_MODEL ="gemini-2.5-pro"
 
 PROMPT_CHECKLIST = """
 Você é um revisor de código experiente. Abaixo estão os arquivos submetidos para análise, cada um identificado pelo seu nome.
