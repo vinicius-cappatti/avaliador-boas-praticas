@@ -1,7 +1,7 @@
-from google import genai
-from config import GEMINI_MODEL
 import os
 from google import genai
+from config import GEMINI_MODEL
+
 
 def enviar_para_gemini(prompt: str) -> str:
     """
@@ -22,4 +22,4 @@ def enviar_para_gemini(prompt: str) -> str:
         model=GEMINI_MODEL,
         contents=prompt,
     )
-    return response
+    return response.text

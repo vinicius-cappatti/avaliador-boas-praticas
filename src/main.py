@@ -130,9 +130,14 @@ def main():
     
     try:
         resposta_gemini = enviar_para_gemini(prompt_final)
-        print("Relatório de Análise:")
-        print("-" * 40)
-        print(resposta_gemini)
+        
+        with open("resposta_gemini.txt", "w", encoding="utf-8") as arquivo_saida:
+            arquivo_saida.write("Revisão do Gemini:\n")
+            arquivo_saida.write("Código analisado: " + (args.github if args.github else ", ".join(args.arquivos)) + "\n\n")
+            arquivo_saida.write(f"{'='*50}\n")
+            arquivo_saida.write(resposta_gemini)
+        
+        print("Resposta do Gemini salva em 'resposta_gemini.txt'.")
     except Exception as e:
         print(f"Erro ao comunicar com o Gemini: {e}")
     
