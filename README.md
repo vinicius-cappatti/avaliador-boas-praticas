@@ -4,7 +4,12 @@ Projeto da disciplina de IA para criar um agente que avalia as boas práticas de
 
 ## Descrição
 
-Este projeto analisa arquivos de código fonte e gera um relatório de boas práticas utilizando inteligência artificial. O sistema verifica:
+Este projeto analisa arquivos de código fonte e gera um relatório de boas práticas utilizando inteligência artificial. O sistema suporta:
+
+- **Arquivos locais**: Analise arquivos de código diretamente do seu computador
+- **Repositórios GitHub**: Informe a URL de um repositório público e o sistema busca automaticamente os arquivos de código
+
+O sistema verifica:
 
 - Nomenclatura de variáveis e funções
 - Presença de comentários
@@ -18,8 +23,10 @@ avaliador-boas-praticas/
 ├── src/
 │   ├── main.py              # Ponto de entrada do programa
 │   ├── utils.py             # Funções utilitárias para leitura de arquivos
-│   ├── config.py            # Configurações e prompts
-│   └── connection_gemini.py # Conexão com a API do Gemini
+│   ├── config.py            # Configurações, prompts e extensões de código
+│   ├── connection_gemini.py # Conexão com a API do Gemini
+│   └── github_utils.py      # Integração com a API do GitHub
+├── requirements.txt         # Dependências do projeto
 ├── .env                     # Variáveis de ambiente (criar manualmente)
 ├── .gitignore
 └── README.md
@@ -131,29 +138,50 @@ pip install -r requirements.txt
 
 ## Como Executar
 
-### Uso Básico
+### Analisar Arquivos Locais
 
 ```bash
 cd src
-python main.py caminho/para/arquivo1.py caminho/para/arquivo2.py
+python main.py -f caminho/para/arquivo1.py caminho/para/arquivo2.py
 ```
 
-### Com Modo Verbose (exibe conteúdo dos arquivos)
+### Analisar Repositório GitHub
 
 ```bash
-python main.py -v arquivo1.py arquivo2.py
+cd src
+python main.py -g https://github.com/usuario/repositorio
 ```
+
+### Opções Disponíveis
+
+| Opção | Descrição |
+|-------|------------|
+| `-f, --arquivos` | Arquivos locais para analisar |
+| `-g, --github` | URL do repositório GitHub público |
+| `-v, --verbose` | Exibe o conteúdo dos arquivos |
+| `-l, --limite-arquivos` | Máximo de arquivos do GitHub (padrão: 20) |
+| `-t, --limite-tamanho` | Tamanho máximo por arquivo em KB (padrão: 100) |
 
 ### Exemplos
 
-Analisar um único arquivo:
+Analisar um único arquivo local:
 ```bash
-python main.py ../exemplos/meu_codigo.py
+python main.py -f ../exemplos/meu_codigo.py
 ```
 
-Analisar múltiplos arquivos:
+Analisar múltiplos arquivos locais:
 ```bash
-python main.py utils.py config.py connection_gemini.py
+python main.py -f utils.py config.py connection_gemini.py
+```
+
+Analisar repositório GitHub com limite de 10 arquivos:
+```bash
+python main.py -g https://github.com/usuario/projeto -l 10
+```
+
+Analisar repositório com modo verbose:
+```bash
+python main.py -g https://github.com/usuario/projeto -v
 ```
 
 ---
