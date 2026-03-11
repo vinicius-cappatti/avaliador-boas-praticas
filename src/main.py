@@ -6,9 +6,8 @@ Suporta arquivos locais ou repositórios públicos do GitHub.
 import argparse
 from utils import ler_multiplos_arquivos, formatar_arquivos
 from config import PROMPT_CHECKLIST
-from connection_gemini import enviar_para_gemini
 from github_utils import buscar_arquivos_codigo_github
-
+from connetion_ia import enviar_para_ia
 
 def processar_arquivos_locais(arquivos: list[str]) -> dict[str, str]:
     """
@@ -129,7 +128,7 @@ def main():
     print(f"{'='*50}\n")
     
     try:
-        resposta_gemini = enviar_para_gemini(prompt_final)
+        resposta_gemini = enviar_para_ia(prompt_final)
         
         with open("resposta_gemini.txt", "w", encoding="utf-8") as arquivo_saida:
             arquivo_saida.write("Revisão do Gemini:\n")
