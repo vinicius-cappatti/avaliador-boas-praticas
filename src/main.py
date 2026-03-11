@@ -7,7 +7,7 @@ import argparse
 from utils import ler_multiplos_arquivos, formatar_arquivos
 from config import PROMPT_CHECKLIST
 from github_utils import buscar_arquivos_codigo_github
-from connetion_ia import enviar_para_ia
+from connection_ia import enviar_para_ia
 
 def processar_arquivos_locais(arquivos: list[str]) -> dict[str, str]:
     """
