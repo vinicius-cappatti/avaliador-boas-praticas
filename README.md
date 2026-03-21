@@ -4,17 +4,20 @@ Projeto da disciplina de IA para criar um agente que avalia as boas práticas de
 
 ## Descrição
 
-Este projeto analisa arquivos de código fonte e gera um relatório de boas práticas utilizando inteligência artificial. O sistema suporta:
+Este projeto analisa arquivos de código **Python** e gera um relatório de boas práticas utilizando inteligência artificial. O sistema executa uma validação automática PEP 8 com **pycodestyle** antes de enviar os resultados para a LLM, que gera um feedback estruturado e didático.
 
-- **Arquivos locais**: Analise arquivos de código diretamente do seu computador
-- **Repositórios GitHub**: Informe a URL de um repositório público e o sistema busca automaticamente os arquivos de código
+O sistema suporta:
 
-O sistema verifica:
+- **Arquivos locais**: Analise arquivos Python diretamente do seu computador
+- **Pasta local**: Informe o caminho de uma pasta e o sistema analisa recursivamente todos os arquivos `.py` dentro dela
+- **Repositórios GitHub**: Informe a URL de um repositório público e o sistema busca automaticamente os arquivos Python
 
-- Nomenclatura de variáveis e funções
-- Presença de comentários
-- Tratamento de exceções
-- Modularização do código
+Fluxo de análise:
+
+1. Os arquivos Python são lidos
+2. O **pycodestyle** valida cada arquivo contra as regras PEP 8
+3. As violações encontradas + código-fonte são enviados à LLM
+4. A LLM gera um feedback estruturado com explicações e sugestões de correção
 
 ## Estrutura do Projeto
 
@@ -23,7 +26,8 @@ avaliador-boas-praticas/
 ├── src/
 │   ├── main.py              # Ponto de entrada do programa
 │   ├── utils.py             # Funções utilitárias para leitura de arquivos
-│   ├── config.py            # Configurações, prompts e extensões de código
+│   ├── config.py            # Configurações, prompts e extensões
+│   ├── pep8_validator.py    # Validação PEP 8 com pycodestyle
 │   ├── connection_ia.py     # Camada de abstração para a IA
 │   ├── connection_ollama.py # Conexão com o modelo via Ollama
 │   └── github_utils.py      # Integração com a API do GitHub
@@ -80,7 +84,7 @@ pip install -r requirements.txt
 Ou instale manualmente:
 
 ```bash
-pip install ollama requests
+pip install ollama requests pycodestyle
 ```
 
 ---
@@ -102,7 +106,16 @@ cd src
 python main.py -f caminho/para/arquivo1.py caminho/para/arquivo2.py
 ```
 
-### 3. Analisar Repositório GitHub
+### 3. Analisar uma Pasta Local
+
+```bash
+cd src
+python main.py -d caminho/para/pasta
+```
+
+O sistema irá percorrer a pasta recursivamente, lendo todos os arquivos `.py` e ignorando pastas como `__pycache__`, `.git`, `.venv`, etc.
+
+### 4. Analisar Repositório GitHub
 
 ```bash
 cd src
@@ -114,6 +127,7 @@ python main.py -g https://github.com/usuario/repositorio
 | Opção | Descrição |
 |-------|------------|
 | `-f, --arquivos` | Arquivos locais para analisar |
+| `-d, --diretorio` | Caminho para uma pasta local (análise recursiva) |
 | `-g, --github` | URL do repositório GitHub público |
 | `-v, --verbose` | Exibe o conteúdo dos arquivos |
 | `-l, --limite-arquivos` | Máximo de arquivos do GitHub (padrão: 20) |
@@ -129,6 +143,11 @@ python main.py -f ../exemplos/meu_codigo.py
 Analisar múltiplos arquivos locais:
 ```bash
 python main.py -f utils.py config.py connection_ollama.py
+```
+
+Analisar todos os arquivos de código de uma pasta:
+```bash
+python main.py -d ../meu_projeto
 ```
 
 Analisar repositório GitHub com limite de 10 arquivos:
@@ -157,7 +176,7 @@ python main.py -g https://github.com/usuario/projeto -v
 
 Execute a instalação das dependências:
 ```bash
-pip install ollama requests
+pip install ollama requests pycodestyle
 ```
 
 ---

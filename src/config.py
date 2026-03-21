@@ -1,56 +1,8 @@
-GEMINI_MODEL = "gemini-2.5-flash"
 OLLAMA_MODEL = "minimax-m2.7:cloud"
 
-# Extensões de arquivos de código fonte reconhecidas
+# Extensões de arquivos de código fonte reconhecidas (somente Python)
 EXTENSOES_CODIGO = [
-    # Python
     ".py",
-    # JavaScript/TypeScript
-    ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs",
-    # Java
-    ".java",
-    # C/C++
-    ".c", ".cpp", ".cc", ".cxx", ".h", ".hpp", ".hxx",
-    # C#
-    ".cs",
-    # Ruby
-    ".rb",
-    # Go
-    ".go",
-    # Rust
-    ".rs",
-    # PHP
-    ".php",
-    # Swift
-    ".swift",
-    # Kotlin
-    ".kt", ".kts",
-    # Scala
-    ".scala",
-    # Dart
-    ".dart",
-    # R
-    ".r", ".R",
-    # Shell
-    ".sh", ".bash",
-    # PowerShell
-    ".ps1",
-    # Lua
-    ".lua",
-    # Perl
-    ".pl", ".pm",
-    # Haskell
-    ".hs",
-    # Elixir
-    ".ex", ".exs",
-    # Clojure
-    ".clj", ".cljs",
-    # HTML/CSS (opcional)
-    ".html", ".htm", ".css", ".scss", ".sass", ".less",
-    # SQL
-    ".sql",
-    # Vue/Svelte
-    ".vue", ".svelte",
 ]
 
 # Pastas que devem ser ignoradas na análise
@@ -84,15 +36,20 @@ PASTAS_IGNORADAS = [
 ]
 
 PROMPT_CHECKLIST = """
-Você é um revisor de código experiente. Abaixo estão os arquivos submetidos para análise, cada um identificado pelo seu nome.
+Você é um revisor de código Python experiente, especialista em PEP 8.
 
-Para cada arquivo, verifique:
-- Nomenclatura de variáveis e funções
-- Presença de comentários
-- Tratamento de exceções
-- Modularização
+Abaixo estão arquivos Python que foram analisados automaticamente pela ferramenta pycodestyle.
+Para cada arquivo, são listadas as violações PEP 8 encontradas (código do erro, linha e descrição).
+Também é incluído o código-fonte completo do arquivo para contexto.
 
-Retorne um relatório separado por arquivo, usando o nome do arquivo como cabeçalho.
+Sua tarefa é gerar um feedback estruturado e didático para o desenvolvedor, contendo:
+1. **Resumo**: uma visão geral da qualidade do código em relação à PEP 8.
+2. **Erros encontrados**: para cada violação, explique o que significa, por que é importante seguir a regra e como corrigir, mostrando o trecho de código corrigido.
+3. **Sugestões gerais**: dicas adicionais de boas práticas Python que podem melhorar o código.
+
+Se um arquivo não tiver violações, parabenize o desenvolvedor e faça sugestões gerais de melhoria.
+
+Retorne o relatório separado por arquivo, usando o nome do arquivo como cabeçalho.
 
 {arquivos_formatados}
 """

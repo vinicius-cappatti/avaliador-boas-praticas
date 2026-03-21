@@ -1,0 +1,203 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage[colorlinks=true, urlcolor=blue]{hyperref}
+
+\setlength{\bibsep}{6pt}
+\setlength{\bibhang}{0.5cm}
+
+\setlength{\bibsep}{6pt}        % 6pt de espaço antes de cada referência
+\setlength{\bibhang}{0.5cm}     % indentação das linhas subsequentes
+    
+\geometry{a4paper, margin=2.5cm}
+
+% Remove numeração da primeira página
+\thispagestyle{empty}
+
+\setlength{\bibsep}{6pt}        % 6pt de espaço antes de cada referência
+\setlength{\bibhang}{0.5cm}     % indentação das linhas subsequentes
+
+\begin{document}
+
+% Formatação das seções: negrito, 13pt, alinhado à esquerda, espaço de 12pt antes
+\titleformat{\section}
+  {\bfseries\fontsize{13}{15}\selectfont}
+  {\thesection}{1em}{}
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+% Formatação das subseções: negrito, 12pt, alinhado à esquerda
+\titleformat{\subsection}
+  {\bfseries\fontsize{12}{14}\selectfont}
+  {\thesubsection}{1em}{}
+\titlespacing{\subsection}{0pt}{12pt}{4pt}
+
+% Indentação dos parágrafos subsequentes: 1.27cm
+\setlength{\parindent}{1.27cm}
+
+% -------------------------------------------------------
+% TÍTULO
+% -------------------------------------------------------
+\begin{center}
+  \vspace{12pt}
+  {\fontsize{16}{19}\bfseries Agente de IA para revisão de código baseado em boas práticas de programação\par}
+\end{center}
+
+% -------------------------------------------------------
+% AUTORES (12pt, bold, mesma linha, separados por vírgula)
+% -------------------------------------------------------
+\vspace{12pt}
+\begin{center}
+  {\fontsize{12}{14}\bfseries
+    Felipe U. G. de Sousa; Gustavo N. Siqueira; Thomaz de S. Scopel; Vinicius S. Cappatti\par}
+\end{center}
+
+% -------------------------------------------------------
+% ENDEREÇOS (12pt, centralizado)
+% -------------------------------------------------------
+\vspace{12pt}
+\begin{center}
+  {\fontsize{12}{14}\selectfont
+    Universidade Presbiteriana Mackenzie\\
+    Rua da Consolação, 930 — São Paulo, SP, Brasil\par}
+\end{center}
+
+% -------------------------------------------------------
+% E-MAILS (Courier New, 10pt, 6pt antes e depois)
+% -------------------------------------------------------
+\vspace{6pt}
+\begin{center}
+  {\fontfamily{pcr}\fontsize{10}{12}\selectfont
+    10418415@mackenzista.com.br, 10419057@mackenzista.com.br, 10417183@mackenzista.com.br, 10418266@mackenzista.com.br\par}
+\end{center}
+\vspace{6pt}
+
+% -------------------------------------------------------
+% RESUMO
+% -------------------------------------------------------
+\begin{list}{}{
+  \setlength{\leftmargin}{0.8cm}
+  \setlength{\rightmargin}{0.8cm}
+}
+\item
+  {\fontsize{12}{14}\selectfont
+    \textbf{Resumo.} Este artigo apresenta o projeto de criação de um agente de inteligência artificial focado na revisão de código a partir da integração com o modelos locais de IA integrados via Llama. O intuito é disponibilizar um agente capaz de analisar o código de arquivos definidos pelo usuário e analisá-los com base em boas práticas de programação, como o uso de comentários, a modularização, a nomenclatura de funções, variáveis e classes, ou outros critérios de qualidade estabelecidos comumente no mercado de desenvolvimento de software.\par}
+\end{list}
+
+% -------------------------------------------------------
+% ABSTRACT
+% -------------------------------------------------------
+\begin{list}{}{
+  \setlength{\leftmargin}{0.8cm}
+  \setlength{\rightmargin}{0.8cm}
+}
+\item
+  {\fontsize{12}{14}\selectfont
+    \textbf{Abstract.} This paper presents the design of an artificial intelligence agent focused on code review, built through integration with local AI models that integrate using Llama. The goal is to provide an agent capable of analyzing the source code of user-defined files and evaluating it based on programming best practices, such as the use of comments, modularization, naming conventions for functions, variables and classes, as well as other quality criteria commonly established in the software development industry.\par}
+\end{list}
+
+% -------------------------------------------------------
+% CORPO DO ARTIGO
+% -------------------------------------------------------
+\section{Introdução}
+
+\noindent
+A crescente adoção de práticas de desenvolvimento de software colaborativo e a expansão do ensino de programação em ambientes acadêmicos têm evidenciado uma lacuna recorrente: a dificuldade de desenvolvedores iniciantes em identificar, sem orientação externa, se seu código está em conformidade com boas práticas de programação. Aspectos como nomenclatura adequada de variáveis e funções, tratamento de exceções, modularização e presença de comentários são frequentemente negligenciados por falta de feedback imediato e acessível.
+
+\setlength{\parindent}{1.27cm}
+Nesse contexto, ferramentas baseadas em inteligência artificial têm se mostrado promissoras para a automação de tarefas de análise e revisão de código. A capacidade desses modelos de compreender semanticamente trechos de código e gerar avaliações estruturadas abre espaço para o desenvolvimento de agentes autônomos capazes de auxiliar desenvolvedores em tempo real, reduzindo a dependência de revisões manuais e acelerando o processo de aprendizado.
+
+Este trabalho apresenta o desenvolvimento de uma ferramenta de linha de comando que integra o modelo Llama, executado localmente por meio da biblioteca \texttt{ollama}, para a avaliação automatizada de boas práticas em código-fonte. A ferramenta permite a análise tanto de arquivos locais quanto de repositórios públicos do GitHub, gerando relatórios estruturados com apontamentos de conformidade e sugestões de melhoria.
+
+\subsection{Objetivos}
+
+O presente trabalho tem como objetivo principal o desenvolvimento de um agente de inteligência artificial integrado à API local disponibilizada pelo Llama, capaz de analisar arquivos de código-fonte submetidos pelo usuário e produzir um relatório estruturado de revisão com base em critérios de boas práticas de programação.
+
+\subsection{Justificativa}
+
+A automação da revisão de código por meio de modelos de inteligência artificial representa uma aplicação direta dos conceitos abordados na disciplina, alinhando teoria e prática de forma concreta. A ferramenta desenvolvida caracteriza-se como um agente inteligente, uma vez que percebe o ambiente por meio dos parâmetros de entrada recebidos em tempo de execução --- o código a ser avaliado --- e age sobre esse ambiente ao produzir sugestões de melhoria fundamentadas nos critérios definidos no prompt.
+
+A escolha do Llama como modelo base justifica-se pela simplicidade de integração proporcionada pela biblioteca \texttt{ollama}, que disponibiliza uma interface de uso gratuito, viabilizando o desenvolvimento do projeto sem custos adicionais. Outro fator relevante é a possibilidade de execução local do modelo: por operar em ambiente controlado, a ferramenta não transmite o código analisado a servidores externos, o que elimina preocupações relacionadas à confidencialidade do código-fonte avaliado.
+
+\subsection{Descrição do Projeto}
+
+A partir dos conceitos apresentados na seção 2.1, é possível implementar um agente inteligente que, utilizando-se de uma LLM, é capaz de utilizar seu conhecimento interno obtido a partir de treinamento prévio com dados públicos de mercado para elaborar a revisão de código sob demanda de um usuário, sugerindo melhorias e apontando problemas encontrados a depender do código analizado.
+
+Nessa implementação, o agente é acionado via linha de comando pelo usuário, que deve enviar o caminho dos arquivos de código a serem avaliados, seja pelo modo arquivo (\texttt{-f}) ou pelo modo Github (\texttt{-g}). As respostas da IA são gravadas em um arquivo de texto. Além disso, o usuário pode ativar a flag \texttt{--verbose} para incluir o conteúdo de cada arquivo analisado na saída do programa no terminal. 
+
+No modo \texttt{-f}, o programa recebe como entrada um ou mais arquivos de código-fonte diretamente pela linha de comando. Os arquivos são lidos e organizados em um dicionário estruturado, no qual cada nome de arquivo é associado ao seu respectivo conteúdo. Essa estrutura é formatada e inserida em um prompt que instrui o modelo a verificar critérios de boas práticas de programação. A resposta gerada é apresentada ao usuário na forma de um relatório organizado por arquivo, identificando pontos de conformidade e sugerindo melhorias. A comunicação com o modelo é realizada por meio da biblioteca oficial \texttt{ollama}.
+
+No modo \texttt{-g}, o usuário fornece pela linha de comando o link de um repositório público do GitHub. Nessa modalidade, o programa coleta o conteúdo dos arquivos de código-fonte do repositório, concatena-os em uma única string e os envia ao modelo acompanhados de um prompt adequado, para que a inteligência artificial realize a avaliação da implementação.
+
+A fim de garantir que apenas arquivos relevantes sejam analisados, o modo \texttt{-g} utiliza uma lista de extensões de linguagens de programação definida no arquivo de configuração \texttt{config.py}. Com isso, arquivos que não constituem código-fonte, como documentações em Markdown ou arquivos de configuração do GitHub — a exemplo do \texttt{.gitignore} —, são automaticamente desconsiderados durante o processo de análise.
+
+\section{Fundamentação Teórica}
+
+\subsection{Conceitos}
+
+Diferentemente da IA tradicional, cujas funcionalidades centrais estão relacionadas à classificação e à regressão sobre dados existentes, a IA generativa é voltada à análise de conjuntos de dados para a criação de novos conteúdos a partir deles (ZHANG et al, 2023).
+
+Em complemento, um agente autônomo é definido como um sistema inserido em um ambiente, capaz de percebê-lo e de utilizar suas informações para agir em prol de seus objetivos, considerando o impacto de cada ação sobre estados futuros (WANG et al, 2024). A partir desse conceito, a implementação de agentes baseados em \textit{Large Language Models} (LLMs) possibilitou o desenvolvimento de sistemas com comportamento análogo ao raciocínio humano, dotados de uma interface computacional que os levou ao destaque nos anos recentes (WANG et al, 2024). Modelos subsequentes passaram a equipar esses agentes com capacidades similares às humanas --- como memória e planejamento --- tornando-os capazes de executar tarefas de forma mais eficiente (WANG et al, 2024).
+
+\subsection{Trabalhos Relacionados}
+
+Simões e Venson (2024) compararam a capacidade de modelos do ChatGPT (OpenAI) com a da ferramenta SonarQube na tarefa de classificação de classes Java com base na qualidade do código. Os resultados evidenciaram divergências entre as duas abordagens: classes bem avaliadas pelo SonarQube foram, em alguns casos, negativamente avaliadas pelo modelo de IA, sugerindo que as métricas adotadas por cada ferramenta capturam aspectos distintos da qualidade do código.
+
+\section{Metodologia e Resultados Esperados}
+
+\subsection{Metodologia}
+
+\noindent
+O desenvolvimento da ferramenta foi organizado em torno de dois fluxos principais de execução, acionados pelas flags \texttt{-f} e \texttt{-g}, ambos convergindo para o mesmo pipeline de análise: coleta do código-fonte, construção do prompt e envio ao modelo.
+
+\setlength{\parindent}{1.27cm}
+Em ambos os modos, o conteúdo dos arquivos de código é coletado e estruturado antes de ser enviado ao modelo. No modo \texttt{-f}, os arquivos são lidos diretamente do sistema de arquivos local e organizados em um dicionário que associa cada nome de arquivo ao seu conteúdo. No modo \texttt{-g}, o programa acessa um repositório público do GitHub, filtra os arquivos cujas extensões estão cadastradas no arquivo \texttt{config.py} como linguagens de programação reconhecidas, e concatena seus conteúdos para envio.
+
+O prompt enviado ao modelo instrui a avaliação do código com base em critérios consolidados de boas práticas de desenvolvimento de software, entre eles: nomenclatura adequada de variáveis e funções, presença e qualidade de comentários, modularização do código, tratamento de exceções e ausência de redundâncias. O modelo utilizado é o Llama, executado localmente por meio da biblioteca \texttt{ollama}, o que dispensa o envio de dados a servidores externos e viabiliza o uso da ferramenta sem custos de API.
+
+A saída gerada pelo modelo é apresentada ao usuário na forma de um relatório estruturado, organizado por arquivo analisado, contendo apontamentos de conformidade e sugestões de melhoria em linguagem acessível.
+
+\subsection{Resultados Esperados}
+
+Espera-se que a ferramenta seja capaz de identificar corretamente violações comuns de boas práticas em códigos de complexidade variada, como o uso de identificadores genéricos (\texttt{x}, \texttt{temp}, \texttt{aux}), ausência de comentários explicativos, funções excessivamente longas e falta de tratamento de exceções.
+
+Espera-se também que o relatório gerado seja suficientemente claro e estruturado para ser útil a desenvolvedores iniciantes, dispensando conhecimento prévio sobre métricas formais de qualidade de código. No modo \texttt{-g}, espera-se que a filtragem por extensão funcione corretamente, garantindo que apenas arquivos de código-fonte sejam submetidos à análise, sem a inclusão de documentações, arquivos de configuração ou outros artefatos irrelevantes.
+
+Por fim, a execução local do modelo deve assegurar que nenhum dado seja transmitido a serviços externos durante a análise, validando o requisito de confidencialidade do código avaliado --- aspecto relevante em contextos nos quais o código-fonte não pode ser compartilhado com provedores de modelos na nuvem.
+
+\section{Resultados parciais e trabalhos futuros}
+
+\subsection{Aspectos éticos do uso da IA}
+
+Apesar de não serem utilizados nenhum tipo de dado sensível, uma vez que há somente a análise de código fonte enviado pelo usuário ou de repositórios públicos no Github, que já estão disponíveis para consulta geral, independentemente da ação do agente, é relevante que o funcionamento dependa de um LLM local para garantir que não haja o envio acidental de informações sensíveis às instituições provedoras de modelos de IA.
+
+Fazendo isso, é garantido a privacidade dos dados avaliados, evitando que sejam utilizados no treinamento de modelos e que fiquem sucetíveis a ataques maliciosos que visem as obter as informações utilizadas para o treinamento dos modelos.
+
+Esse cuidado deve ser levado em conta principalmente em contextos altamente regulados, como em ambientes bancários ou em empresas de tecnologia com acesso a uma grande quantidade de dados sensíveis de seus usuários, dado que a Lei Geral de Proteção de Dados (LGPD) de 2018 proíbe expressamente que dados sejam compartilhados sem uma finalidade legítima consensada pelo usuário.
+
+\subsection{Resultados obtidos}
+
+O agente desenvolvido é capaz de enviar o código  para a avaliação do LLM a partir de qualquer um dos modos de funcionamento (\texttt{-f} e \texttt{-g}), integrando com sucesso com o modelo do Llama instalado na máquina hospedeira do projeto e solicitando a revisão das boas práticas aplicadas.
+
+As IAs são capazes de analisar o código por completo, identificando problemas de implementação, sugerindo melhorias e gerando um relatório de execução elencando pontos positivos e a melhorar.
+
+Além de avaliar se a implementação segue os padrões comuns de projeto, ela também identifica melhorias de implementação e correção de bugs identificados durante a análise. Ou seja, ela não se restringe a analisar somente a forma, mas também o conteúdo do código.
+
+\subsection{Repositório do projeto}
+
+Projeto disponível em: \href{https://github.com/vinicius-cappatti/avaliador-boas-praticas}{avaliador-boas-praticas}
+
+\section{Referências bibliográficas}
+
+SIMÕES, Igor Regis da Silva; VENSON, Elaine. "Evaluating Source Code Quality with Large Language Models: acomparative study". 2024. Salvador, Brasil. SBQS 2024. DOI: https://doi.org/10.1145/3701625.3701650
+
+ZHANG, Chaoning; et al. "A Complete Survey on Generative AI (AIGC): Is ChatGPT from GPT-4 to GPT-5 All You Need?". 2023. Coréia do Sul.
+
+WANG, Lei; et al. "A survey on large language model based autonomous agents". 2024. Pequim, China. DOI: https://doi.org/10.1007/s11704-024-40231-1
+
+\end{document}
