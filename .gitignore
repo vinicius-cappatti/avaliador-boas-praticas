@@ -207,8 +207,3 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-
-# Testes
-resposta_llama.txt
-resposta_llama.md
-testes/
