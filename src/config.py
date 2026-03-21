@@ -1,4 +1,5 @@
 GEMINI_MODEL = "gemini-2.5-flash"
+OLLAMA_MODEL = "minimax-m2.7:cloud"
 
 # Extensões de arquivos de código fonte reconhecidas
 EXTENSOES_CODIGO = [

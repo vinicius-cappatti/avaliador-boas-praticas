@@ -122,23 +122,23 @@ def main():
             print("-" * 40)
         print()
     
-    # Envia para o Gemini e exibe a resposta
+    # Envia para o llama e exibe a resposta
     print(f"{'='*50}")
-    print("Enviando para análise do Gemini...")
+    print("Enviando para análise do Llama...")
     print(f"{'='*50}\n")
     
     try:
-        resposta_gemini = enviar_para_ia(prompt_final)
+        resposta_llama = enviar_para_ia(prompt_final)
         
-        with open("resposta_gemini.txt", "w", encoding="utf-8") as arquivo_saida:
-            arquivo_saida.write("Revisão do Gemini:\n")
+        with open("resposta_llama.txt", "w", encoding="utf-8") as arquivo_saida:
+            arquivo_saida.write("Revisão do Llama:\n")
             arquivo_saida.write("Código analisado: " + (args.github if args.github else ", ".join(args.arquivos)) + "\n\n")
             arquivo_saida.write(f"{'='*50}\n")
-            arquivo_saida.write(resposta_gemini)
+            arquivo_saida.write(resposta_llama)
         
-        print("Resposta do Gemini salva em 'resposta_gemini.txt'.")
+        print("Resposta do Llama salva em 'resposta_llama.txt'.")
     except Exception as e:
-        print(f"Erro ao comunicar com o Gemini: {e}")
+        print(f"Erro ao comunicar com o Llama: {e}")
     
     return conteudos
 
