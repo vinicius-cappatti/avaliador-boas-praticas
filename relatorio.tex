@@ -86,7 +86,7 @@
 }
 \item
   {\fontsize{12}{14}\selectfont
-    \textbf{Resumo.} Este artigo apresenta o projeto de criação de um agente de inteligência artificial focado na revisão de código a partir da integração com o modelos locais de IA integrados via Llama. O intuito é disponibilizar um agente capaz de analisar o código de arquivos definidos pelo usuário e analisá-los com base em boas práticas de programação, como o uso de comentários, a modularização, a nomenclatura de funções, variáveis e classes, ou outros critérios de qualidade estabelecidos comumente no mercado de desenvolvimento de software.\par}
+    \textbf{Resumo.} Este artigo apresenta o projeto de criação de um agente de inteligência artificial focado na revisão de código Python a partir da integração com modelos locais de IA via Llama. O sistema realiza uma validação automática de conformidade com a PEP 8 utilizando a biblioteca \texttt{pycodestyle} e, em seguida, envia os erros encontrados ao modelo de linguagem para a geração de um feedback estruturado e didático. O agente é capaz de analisar arquivos Python individuais, pastas locais de forma recursiva ou repositórios públicos do GitHub, produzindo relatórios com explicações detalhadas sobre cada violação identificada e sugestões de correção.\par}
 \end{list}
 
 % -------------------------------------------------------
@@ -98,7 +98,7 @@
 }
 \item
   {\fontsize{12}{14}\selectfont
-    \textbf{Abstract.} This paper presents the design of an artificial intelligence agent focused on code review, built through integration with local AI models that integrate using Llama. The goal is to provide an agent capable of analyzing the source code of user-defined files and evaluating it based on programming best practices, such as the use of comments, modularization, naming conventions for functions, variables and classes, as well as other quality criteria commonly established in the software development industry.\par}
+    \textbf{Abstract.} This paper presents the design of an artificial intelligence agent focused on Python code review, built through integration with local AI models using Llama. The system performs an automated PEP 8 compliance check using the \texttt{pycodestyle} library and then sends the identified violations to the language model to generate structured and didactic feedback. The agent is capable of analyzing individual Python files, local folders recursively, or public GitHub repositories, producing reports with detailed explanations of each identified violation along with suggested corrections.\par}
 \end{list}
 
 % -------------------------------------------------------
@@ -112,11 +112,11 @@ A crescente adoção de práticas de desenvolvimento de software colaborativo e 
 \setlength{\parindent}{1.27cm}
 Nesse contexto, ferramentas baseadas em inteligência artificial têm se mostrado promissoras para a automação de tarefas de análise e revisão de código. A capacidade desses modelos de compreender semanticamente trechos de código e gerar avaliações estruturadas abre espaço para o desenvolvimento de agentes autônomos capazes de auxiliar desenvolvedores em tempo real, reduzindo a dependência de revisões manuais e acelerando o processo de aprendizado.
 
-Este trabalho apresenta o desenvolvimento de uma ferramenta de linha de comando que integra o modelo Llama, executado localmente por meio da biblioteca \texttt{ollama}, para a avaliação automatizada de boas práticas em código-fonte. A ferramenta permite a análise tanto de arquivos locais quanto de repositórios públicos do GitHub, gerando relatórios estruturados com apontamentos de conformidade e sugestões de melhoria.
+Este trabalho apresenta o desenvolvimento de uma ferramenta de linha de comando que combina a validação automática de conformidade com a PEP 8, realizada pela biblioteca \texttt{pycodestyle}, com a geração de feedback estruturado por meio do modelo Llama, executado localmente via \texttt{ollama}. A ferramenta é restrita à análise de código Python e permite a avaliação de arquivos individuais, pastas inteiras de forma recursiva ou repositórios públicos do GitHub.
 
 \subsection{Objetivos}
 
-O presente trabalho tem como objetivo principal o desenvolvimento de um agente de inteligência artificial integrado à API local disponibilizada pelo Llama, capaz de analisar arquivos de código-fonte submetidos pelo usuário e produzir um relatório estruturado de revisão com base em critérios de boas práticas de programação.
+O presente trabalho tem como objetivo principal o desenvolvimento de um agente de inteligência artificial integrado que ajude desenvolvedores Python a validarem a conformidade de seus programas com boas práticas de programação utilizadas no mercado. Para isso, o agente valida a conformidade do código com as regras da PEP 8 para avaliar se eles as cumprem ou não.
 
 \subsection{Justificativa}
 
@@ -126,47 +126,67 @@ A escolha do Llama como modelo base justifica-se pela simplicidade de integraç�
 
 \subsection{Descrição do Projeto}
 
-A partir dos conceitos apresentados na seção 2.1, é possível implementar um agente inteligente que, utilizando-se de uma LLM, é capaz de utilizar seu conhecimento interno obtido a partir de treinamento prévio com dados públicos de mercado para elaborar a revisão de código sob demanda de um usuário, sugerindo melhorias e apontando problemas encontrados a depender do código analizado.
+A partir dos conceitos apresentados na seção 2.1, é possível implementar um agente inteligente que, utilizando-se de uma LLM em conjunto com ferramentas de análise estática, é capaz de avaliar código Python sob demanda de um usuário, identificando violações de conformidade com a PEP 8 e gerando sugestões de correção fundamentadas.
 
-Nessa implementação, o agente é acionado via linha de comando pelo usuário, que deve enviar o caminho dos arquivos de código a serem avaliados, seja pelo modo arquivo (\texttt{-f}) ou pelo modo Github (\texttt{-g}). As respostas da IA são gravadas em um arquivo de texto. Além disso, o usuário pode ativar a flag \texttt{--verbose} para incluir o conteúdo de cada arquivo analisado na saída do programa no terminal. 
+Nessa implementação, o agente é acionado via linha de comando pelo usuário, que deve indicar a fonte do código a ser avaliado por meio de um dos três modos disponíveis: arquivo (\texttt{-f}), diretório (\texttt{-d}) ou Github (\texttt{-g}). O sistema aceita exclusivamente arquivos Python (\texttt{.py}). As respostas da IA são gravadas em um arquivo em formato MarkDown, de forma que é gerado um relatório intuitivo e completo do código avaliado, explicando cada apontamento encontrado e sugerindo melhorias. Além disso, o usuário pode ativar a flag \texttt{--verbose} para incluir o conteúdo de cada arquivo analisado na saída do programa no terminal.
 
-No modo \texttt{-f}, o programa recebe como entrada um ou mais arquivos de código-fonte diretamente pela linha de comando. Os arquivos são lidos e organizados em um dicionário estruturado, no qual cada nome de arquivo é associado ao seu respectivo conteúdo. Essa estrutura é formatada e inserida em um prompt que instrui o modelo a verificar critérios de boas práticas de programação. A resposta gerada é apresentada ao usuário na forma de um relatório organizado por arquivo, identificando pontos de conformidade e sugerindo melhorias. A comunicação com o modelo é realizada por meio da biblioteca oficial \texttt{ollama}.
+Antes do envio à LLM, cada arquivo é submetido a uma camada de validação automática utilizando a biblioteca \texttt{pycodestyle}, que verifica a conformidade do código com as regras da PEP 8 --- o guia de estilo oficial da linguagem Python. As violações encontradas (código do erro, linha, coluna e descrição) são estruturadas e enviadas ao modelo juntamente com o código-fonte, para que a LLM gere um feedback didático contendo explicações sobre cada violação e sugestões de correção.
 
-No modo \texttt{-g}, o usuário fornece pela linha de comando o link de um repositório público do GitHub. Nessa modalidade, o programa coleta o conteúdo dos arquivos de código-fonte do repositório, concatena-os em uma única string e os envia ao modelo acompanhados de um prompt adequado, para que a inteligência artificial realize a avaliação da implementação.
+No modo \texttt{-f}, o programa recebe como entrada um ou mais arquivos Python diretamente pela linha de comando. Os arquivos são lidos e organizados em um dicionário estruturado, no qual cada nome de arquivo é associado ao seu respectivo conteúdo.
 
-A fim de garantir que apenas arquivos relevantes sejam analisados, o modo \texttt{-g} utiliza uma lista de extensões de linguagens de programação definida no arquivo de configuração \texttt{config.py}. Com isso, arquivos que não constituem código-fonte, como documentações em Markdown ou arquivos de configuração do GitHub — a exemplo do \texttt{.gitignore} —, são automaticamente desconsiderados durante o processo de análise.
+No modo \texttt{-d}, o usuário informa o caminho de uma pasta local. O programa percorre a pasta recursivamente, identificando todos os arquivos com extensão \texttt{.py} e ignorando diretórios comuns que não contêm código relevante, como \texttt{\_\_pycache\_\_}, \texttt{.venv}, \texttt{.git}, entre outros definidos no arquivo \texttt{config.py}.
+
+No modo \texttt{-g}, o usuário fornece pela linha de comando o link de um repositório público do GitHub. Nessa modalidade, o programa coleta os arquivos Python do repositório, filtrando apenas aqueles com extensão \texttt{.py}, e os submete ao mesmo pipeline de validação PEP 8 e análise pela LLM.
+
+Em todos os modos, o fluxo de análise é o mesmo: leitura do código, validação PEP 8 com \texttt{pycodestyle}, construção do prompt com código-fonte e violações encontradas, envio ao modelo Llama via \texttt{ollama} e geração do relatório de feedback.
 
 \section{Fundamentação Teórica}
 
 \subsection{Conceitos}
 
-Diferentemente da IA tradicional, cujas funcionalidades centrais estão relacionadas à classificação e à regressão sobre dados existentes, a IA generativa é voltada à análise de conjuntos de dados para a criação de novos conteúdos a partir deles (ZHANG et al, 2023).
+Diferentemente da IA tradicional, cujas funcionalidades centrais estão relacionadas à classificação e à regressão sobre dados existentes, a IA generativa é voltada à análise de conjuntos de dados para a criação de novos conteúdos a partir deles (ZHANG et al, 2023). Nota-se, porém, que mesmo a IA generativa também requer uma compreensão de um dataset inicial, como um prompt de instruções, para poder gerar novos conteúdos (ZHANG et al, 2023), assim como a IA tradicional também é capaz de gerar conteúdos novos, como o conteúdo de uma legenda em uma atividade de classificação de imagens (ZHANG et al, 2023).
 
 Em complemento, um agente autônomo é definido como um sistema inserido em um ambiente, capaz de percebê-lo e de utilizar suas informações para agir em prol de seus objetivos, considerando o impacto de cada ação sobre estados futuros (WANG et al, 2024). A partir desse conceito, a implementação de agentes baseados em \textit{Large Language Models} (LLMs) possibilitou o desenvolvimento de sistemas com comportamento análogo ao raciocínio humano, dotados de uma interface computacional que os levou ao destaque nos anos recentes (WANG et al, 2024). Modelos subsequentes passaram a equipar esses agentes com capacidades similares às humanas --- como memória e planejamento --- tornando-os capazes de executar tarefas de forma mais eficiente (WANG et al, 2024).
 
 \subsection{Trabalhos Relacionados}
 
-Simões e Venson (2024) compararam a capacidade de modelos do ChatGPT (OpenAI) com a da ferramenta SonarQube na tarefa de classificação de classes Java com base na qualidade do código. Os resultados evidenciaram divergências entre as duas abordagens: classes bem avaliadas pelo SonarQube foram, em alguns casos, negativamente avaliadas pelo modelo de IA, sugerindo que as métricas adotadas por cada ferramenta capturam aspectos distintos da qualidade do código.
+Simões e Venson (2024) compararam a capacidade de modelos  3.5 e 4o do ChatGPT (OpenAI) com a da ferramenta SonarQube na tarefa de classificação de classes Java com base na qualidade do código. Os resultados evidenciaram divergências entre as duas abordagens: classes bem avaliadas pelo SonarQube foram, em alguns casos, negativamente avaliadas pelo modelo de IA, sugerindo que as métricas adotadas por cada ferramenta capturam aspectos distintos da qualidade do código.
+
+Já em Plaake et al. (2025) aborda como os agentes de IA podem ser usados para a geração de novos dados empíricos para o treinamento de LLMs, em um contexto no qual escalar os datasets utilizados em novos treinamentos tem se tornado cada vez mais complexo, tendo em vista a quantidade de dados já avaliados pelos modelos.
+
+Plaake et al. (2025) também discute sobre abordagens de treinamento de LLMs baseadas nos feedbacks recebidos de suas interações com os ambientes quando são implementados agentes, gerando loops de feedbacks com os dados gerados via Chain of Thought da própia IA enquanto ela está resolvendo algum problema.
+
+Com ferramentas de codificação, como Codex, Claude Code e OpenCode, também cresceu a adoção do Vibe Coding e do desenvolvimento voltado para especificação, onde os programadores utilizam de um ou mais agentes de IA simultaneamente escrevendo, validando e testando código para automatizarem a tarefa de programação a fim de ganharem produtividade em contextos empresariais.
 
 \section{Metodologia e Resultados Esperados}
 
 \subsection{Metodologia}
 
 \noindent
-O desenvolvimento da ferramenta foi organizado em torno de dois fluxos principais de execução, acionados pelas flags \texttt{-f} e \texttt{-g}, ambos convergindo para o mesmo pipeline de análise: coleta do código-fonte, construção do prompt e envio ao modelo.
+O desenvolvimento da ferramenta foi organizado em torno de três fluxos principais de execução, acionados pelas flags \texttt{-f}, \texttt{-d} e \texttt{-g}, todos convergindo para o mesmo pipeline de análise: coleta do código-fonte Python, validação PEP 8 com \texttt{pycodestyle}, construção do prompt e envio ao modelo.
 
 \setlength{\parindent}{1.27cm}
-Em ambos os modos, o conteúdo dos arquivos de código é coletado e estruturado antes de ser enviado ao modelo. No modo \texttt{-f}, os arquivos são lidos diretamente do sistema de arquivos local e organizados em um dicionário que associa cada nome de arquivo ao seu conteúdo. No modo \texttt{-g}, o programa acessa um repositório público do GitHub, filtra os arquivos cujas extensões estão cadastradas no arquivo \texttt{config.py} como linguagens de programação reconhecidas, e concatena seus conteúdos para envio.
+Em todos os modos, o conteúdo dos arquivos Python é coletado e estruturado antes de ser validado e enviado ao modelo. No modo \texttt{-f}, os arquivos são lidos diretamente do sistema de arquivos local. No modo \texttt{-d}, a pasta informada é percorrida recursivamente em busca de arquivos \texttt{.py}, ignorando diretórios como \texttt{\_\_pycache\_\_}, \texttt{.venv} e \texttt{.git}. No modo \texttt{-g}, o programa acessa um repositório público do GitHub e filtra apenas os arquivos com extensão \texttt{.py}.
 
-O prompt enviado ao modelo instrui a avaliação do código com base em critérios consolidados de boas práticas de desenvolvimento de software, entre eles: nomenclatura adequada de variáveis e funções, presença e qualidade de comentários, modularização do código, tratamento de exceções e ausência de redundâncias. O modelo utilizado é o Llama, executado localmente por meio da biblioteca \texttt{ollama}, o que dispensa o envio de dados a servidores externos e viabiliza o uso da ferramenta sem custos de API.
+Após a coleta, cada arquivo é submetido à validação automática de conformidade com a PEP 8 por meio da biblioteca \texttt{pycodestyle}. As violações encontradas --- incluindo código do erro, número da linha, coluna e descrição --- são estruturadas e incluídas no prompt juntamente com o código-fonte de cada arquivo. Dessa forma, o modelo recebe informações objetivas sobre os problemas identificados e é instruído a gerar explicações didáticas sobre cada violação, indicar como corrigi-la e oferecer sugestões gerais de melhoria.
 
-A saída gerada pelo modelo é apresentada ao usuário na forma de um relatório estruturado, organizado por arquivo analisado, contendo apontamentos de conformidade e sugestões de melhoria em linguagem acessível.
+O modelo utilizado é o Llama, executado localmente por meio da biblioteca \texttt{ollama}, o que dispensa o envio de dados a servidores externos e viabiliza o uso da ferramenta sem custos de API.
+
+A saída gerada pelo modelo é apresentada ao usuário na forma de um relatório estruturado, organizado por arquivo analisado, contendo um resumo da qualidade do código, explicações sobre cada violação PEP 8 com trechos de código corrigidos e sugestões adicionais de boas práticas.
+
+\subsection{Datasets}
+
+A implementação foi testada utilizando o modelo Claude Opus 4.6, da Anthropic, via Github Copilot para gerar 25 arquivos em Python que foram repassados para a avaliação do agente. Em 12 dos arquivos gerados, o Claude propositalmente inseriu violações da PEP 8 e construiu um relatório (disponível em \texttt{tests/gabarito/gabarito.md}) com todas as violações encontradas em cada um dos arquivos.
+
+Os arquivos gerados implementam funções ou classes simples em Python, e são focados especificamente na forma da escrita ao invés da funcionalidade. Eles implementam algoritmos comuns do ambiente acadêmico da programação, especialmente em um nível iniciante, mas alguns com violações propositais das normas da PEP 8.
+
+Tanto os arquivos gerados pelo Claude quanto o \texttt{gabarito.md} estão disponíveis dentro do repositório Github deste projeto, referenciado na seção 4.3 desse relatório.
 
 \subsection{Resultados Esperados}
 
-Espera-se que a ferramenta seja capaz de identificar corretamente violações comuns de boas práticas em códigos de complexidade variada, como o uso de identificadores genéricos (\texttt{x}, \texttt{temp}, \texttt{aux}), ausência de comentários explicativos, funções excessivamente longas e falta de tratamento de exceções.
+Espera-se que a ferramenta seja capaz de identificar corretamente violações de conformidade com a PEP 8 em códigos de complexidade variada, tais como espaçamentos incorretos, indentação fora do padrão, linhas excessivamente longas e ausência de linhas em branco entre definições de funções e classes.
 
-Espera-se também que o relatório gerado seja suficientemente claro e estruturado para ser útil a desenvolvedores iniciantes, dispensando conhecimento prévio sobre métricas formais de qualidade de código. No modo \texttt{-g}, espera-se que a filtragem por extensão funcione corretamente, garantindo que apenas arquivos de código-fonte sejam submetidos à análise, sem a inclusão de documentações, arquivos de configuração ou outros artefatos irrelevantes.
+Espera-se também que o feedback gerado pelo modelo, a partir das violações identificadas pelo \texttt{pycodestyle}, seja suficientemente claro e didático para ser útil a desenvolvedores iniciantes, explicando cada violação, sua importância e como corrigi-la. No modo \texttt{-d}, espera-se que a leitura recursiva de pastas funcione corretamente, incluindo apenas arquivos \texttt{.py} e ignorando diretórios irrelevantes. No modo \texttt{-g}, espera-se que a filtragem por extensão funcione corretamente, garantindo que apenas arquivos Python sejam submetidos à análise.
 
 Por fim, a execução local do modelo deve assegurar que nenhum dado seja transmitido a serviços externos durante a análise, validando o requisito de confidencialidade do código avaliado --- aspecto relevante em contextos nos quais o código-fonte não pode ser compartilhado com provedores de modelos na nuvem.
 
@@ -182,11 +202,89 @@ Esse cuidado deve ser levado em conta principalmente em contextos altamente regu
 
 \subsection{Resultados obtidos}
 
-O agente desenvolvido é capaz de enviar o código  para a avaliação do LLM a partir de qualquer um dos modos de funcionamento (\texttt{-f} e \texttt{-g}), integrando com sucesso com o modelo do Llama instalado na máquina hospedeira do projeto e solicitando a revisão das boas práticas aplicadas.
+Para avaliar a eficácia do agente, os 25 arquivos de teste foram submetidos ao pipeline completo da ferramenta, e o relatório gerado pelo modelo (disponível em \texttt{resposta\_llama.md}) foi comparado ao gabarito produzido pela ferramenta \texttt{pycodestyle} (disponível em \texttt{gabarito.md}). O modelo utilizado nesta avaliação foi o \texttt{minimax-m2.7:cloud}, executado localmente via \texttt{ollama}.
 
-As IAs são capazes de analisar o código por completo, identificando problemas de implementação, sugerindo melhorias e gerando um relatório de execução elencando pontos positivos e a melhorar.
+\subsubsection{Detecção de violações}
 
-Além de avaliar se a implementação segue os padrões comuns de projeto, ela também identifica melhorias de implementação e correção de bugs identificados durante a análise. Ou seja, ela não se restringe a analisar somente a forma, mas também o conteúdo do código.
+O \texttt{pycodestyle} identificou 217 violações distribuídas em 12 dos 25 arquivos analisados, enquanto os 13 arquivos restantes foram classificados como livres de erros. A Tabela~\ref{tab:comparacao} apresenta a comparação das contagens por arquivo entre o gabarito e o relatório gerado pelo modelo.
+
+O modelo obteve 100\% de acurácia na contagem de violações por arquivo, reproduzindo exatamente os valores reportados pelo \texttt{pycodestyle} em todos os 12 arquivos com erros. Os 13 arquivos limpos também foram corretamente identificados como livres de violações e sem registro de falsos positivos nem de falsos negativos.
+
+\begin{table}[h]
+\centering
+\caption{Comparação de violações por arquivo: pycodestyle vs.\ modelo}
+\label{tab:comparacao}
+\small
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Arquivo} & \textbf{pycodestyle} & \textbf{Modelo} & \textbf{Acerto} \\
+\hline
+02\_strings.py        & 10 & 10 & Sim \\
+04\_pessoa.py         &  9 &  9 & Sim \\
+06\_matematica.py     & 22 & 22 & Sim \\
+08\_conta\_bancaria.py & 13 & 13 & Sim \\
+10\_arquivos.py       & 15 & 15 & Sim \\
+12\_pilha.py          &  9 &  9 & Sim \\
+14\_geometria.py      & 25 & 25 & Sim \\
+16\_tarefas.py        & 18 & 18 & Sim \\
+18\_criptografia.py   & 19 & 19 & Sim \\
+20\_senhas.py         & 11 & 11 & Sim \\
+22\_inventario.py     & 25 & 25 & Sim \\
+24\_logger.py         & 41 & 41 & Sim \\
+\hline
+\textbf{Total}        & \textbf{217} & \textbf{217} & --- \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Categorias de erros identificados}
+
+As 217 violações detectadas distribuem-se em 9 categorias de erros PEP 8, conforme a Tabela~\ref{tab:categorias}.
+
+\begin{table}[h]
+\centering
+\caption{Distribuição das violações por categoria}
+\label{tab:categorias}
+\small
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Código} & \textbf{Descrição} & \textbf{Ocorrências} \\
+\hline
+E225 & Falta de espaço ao redor de operadores       & 62 \\
+E231 & Falta de espaço após vírgula                  & 78 \\
+E302 & Falta de 2 linhas em branco entre definições  & 30 \\
+E301 & Falta de 1 linha em branco entre métodos      & 21 \\
+E201 & Espaço após parêntese de abertura             & 10 \\
+E202 & Espaço antes de parêntese de fechamento       & 10 \\
+E228 & Falta de espaço ao redor do operador módulo   &  3 \\
+E501 & Linha com mais de 79 caracteres               &  2 \\
+E227 & Falta de espaço ao redor de operador bitwise  &  1 \\
+\hline
+\textbf{Total} & & \textbf{217} \\
+\hline
+\end{tabular}
+\end{table}
+
+O modelo identificou corretamente todas as 9 categorias de erros e produziu explicações adequadas para cada uma delas, incluindo exemplos de código com o padrão incorreto e a correção correspondente.
+
+\subsubsection{Qualidade do feedback gerado}
+
+Além da detecção quantitativa, o relatório gerado pelo modelo apresentou características qualitativas relevantes:
+
+\begin{itemize}
+  \item \textbf{Explicações didáticas:} cada categoria de violação foi acompanhada de uma explicação sobre a regra PEP 8 violada e por que a conformidade é importante.
+  \item \textbf{Exemplos de correção:} o modelo apresentou trechos de código com o padrão incorreto e o padrão correto lado a lado, utilizando marcadores visuais (\texttt{Errado} / \texttt{Correto}).
+  \item \textbf{Sugestões adicionais:} para todos os 25 arquivos --- incluindo os sem violações --- o modelo forneceu sugestões de melhoria que vão além do escopo do \texttt{pycodestyle}, como o uso de \textit{type hints}, \texttt{@dataclass}, módulos da biblioteca padrão e ferramentas de formatação automática como \texttt{black} e \texttt{ruff}.
+  \item \textbf{Observação além do pycodestyle:} no arquivo \texttt{04\_pessoa.py}, o modelo identificou que a classe \texttt{pessoa} foi declarada com inicial minúscula, violando a convenção PascalCase da PEP 8 para nomes de classes --- uma violação legítima que o \texttt{pycodestyle} não verifica, demonstrando a capacidade do modelo de complementar a análise estática.
+\end{itemize}
+
+\subsubsection{Inconsistências encontradas}
+
+Apesar do desempenho quantitativo perfeito na detecção de violações, o relatório do modelo apresentou uma inconsistência textual no resumo final: o parágrafo de conclusão afirma que houve ``10 arquivos sem violações e 15 com violações'', quando a própria tabela resumo do relatório mostra corretamente 13 arquivos limpos e 12 com violações. Trata-se de um erro de contagem na geração do texto resumo, sem impacto sobre a análise individual de cada arquivo.
+
+\subsubsection{Conclusão dos resultados}
+
+Os resultados obtidos demonstram que a combinação da validação automática do \texttt{pycodestyle} com a geração de feedback pelo modelo Llama produziu um relatório com detecção precisa e feedback didático de alta qualidade. O modelo reproduziu fielmente as 217 violações identificadas pela ferramenta de análise estática, categorizou corretamente todos os tipos de erro e foi capaz de acrescentar observações pertinentes que extrapolam o escopo do \texttt{pycodestyle}. A única limitação observada foi um erro aritmético no resumo textual gerado pelo modelo, que não comprometeu a qualidade das análises individuais.
 
 \subsection{Repositório do projeto}
 
@@ -194,10 +292,12 @@ Projeto disponível em: \href{https://github.com/vinicius-cappatti/avaliador-boa
 
 \section{Referências bibliográficas}
 
+PLAAT, Aske; et al. "Agentic Large Language Models, a Survey". 2025. Países Baixos. Journal of Artificial Intelligence Research 84. DOI: https://doi.org/10.1613/jair.1.18675
+
 SIMÕES, Igor Regis da Silva; VENSON, Elaine. "Evaluating Source Code Quality with Large Language Models: acomparative study". 2024. Salvador, Brasil. SBQS 2024. DOI: https://doi.org/10.1145/3701625.3701650
 
-ZHANG, Chaoning; et al. "A Complete Survey on Generative AI (AIGC): Is ChatGPT from GPT-4 to GPT-5 All You Need?". 2023. Coréia do Sul.
-
 WANG, Lei; et al. "A survey on large language model based autonomous agents". 2024. Pequim, China. DOI: https://doi.org/10.1007/s11704-024-40231-1
+
+ZHANG, Chaoning; et al. "A Complete Survey on Generative AI (AIGC): Is ChatGPT from GPT-4 to GPT-5 All You Need?". 2023. Coréia do Sul.
 
 \end{document}
