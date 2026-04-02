@@ -118,6 +118,10 @@ Este trabalho apresenta o desenvolvimento de uma ferramenta de linha de comando 
 
 O presente trabalho tem como objetivo principal o desenvolvimento de um agente de inteligência artificial integrado que ajude desenvolvedores Python a validarem a conformidade de seus programas com boas práticas de programação utilizadas no mercado. Para isso, o agente valida a conformidade do código com as regras da PEP 8 para avaliar se eles as cumprem ou não.
 
+\subsection{Opção do projeto}
+
+O projeto foi desenvolvido alinhado com a **Opção LLM12** (Empregar grandes modelos de linguagem para implementar uma solução de análise de dados de negócio ou algo similar). Neste contexto, a IA atua na "análise de negócio" voltada ao desenvolvimento de software, processando artefatos de código-fonte como dados de entrada para identificar padrões, apontar infrações de qualidade (PEP 8) e gerar feedback fundamentado, assemelhando-se à revisão automatizada de documentos técnicos.
+
 \subsection{Justificativa}
 
 A automação da revisão de código por meio de modelos de inteligência artificial representa uma aplicação direta dos conceitos abordados na disciplina, alinhando teoria e prática de forma concreta. A ferramenta desenvolvida caracteriza-se como um agente inteligente, uma vez que percebe o ambiente por meio dos parâmetros de entrada recebidos em tempo de execução --- o código a ser avaliado --- e age sobre esse ambiente ao produzir sugestões de melhoria fundamentadas nos critérios definidos no prompt.
@@ -286,9 +290,9 @@ Apesar do desempenho quantitativo perfeito na detecção de violações, o relat
 
 Os resultados obtidos demonstram que a combinação da validação automática do \texttt{pycodestyle} com a geração de feedback pelo modelo Llama produziu um relatório com detecção precisa e feedback didático de alta qualidade. O modelo reproduziu fielmente as 217 violações identificadas pela ferramenta de análise estática, categorizou corretamente todos os tipos de erro e foi capaz de acrescentar observações pertinentes que extrapolam o escopo do \texttt{pycodestyle}. A única limitação observada foi um erro aritmético no resumo textual gerado pelo modelo, que não comprometeu a qualidade das análises individuais.
 
-\subsection{Repositório do projeto}
+\subsection{Endereço GitHub}
 
-Projeto disponível em: \href{https://github.com/vinicius-cappatti/avaliador-boas-praticas}{avaliador-boas-praticas}
+Todos os artefatos parciais gerados, juntamente com o texto do relato e os códigos e notebooks de análise exploratória, encontram-se centralizados publicamente e disponíveis no repositório do projeto: \href{https://github.com/vinicius-cappatti/avaliador-boas-praticas}{avaliador-boas-praticas}.
 
 \section{Referências bibliográficas}
 
