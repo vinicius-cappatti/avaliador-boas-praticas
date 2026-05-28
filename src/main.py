@@ -1,3 +1,19 @@
+# ==============================================================================
+# INTEGRANTES:
+# - Felipe U. G. de Sousa (RA: 10418415)
+# - Gustavo N. Siqueira (RA: 10419057)
+# - Thomaz de S. Scopel (RA: 10417183)
+# - Vinicius S. Cappatti (RA: 10418266)
+#
+# SÍNTESE DO ARQUIVO:
+# Ponto de entrada principal do avaliador. Orquestra a leitura, validação PEP8 e a LLM.
+#
+# HISTÓRICO DE ALTERAÇÕES:
+# Data       | Autor       | Breve descrição da atualização
+# ------------------------------------------------------------------------------
+# 02/04/2026 | Equipe      | Adição de cabeçalho padronizado e adequação N1.
+# ==============================================================================
+
 """
 Programa para ler arquivos Python e avaliá-los com validação PEP 8 automática.
 Os erros encontrados são enviados a uma LLM para gerar feedback estruturado.

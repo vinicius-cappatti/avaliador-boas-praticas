@@ -1,2 +1,7 @@
 ollama
 requests
+pycodestyle
+pandas
+matplotlib
+seaborn
+jupyter

@@ -76,7 +76,39 @@ No ecossistema Python, a PEP 8 estabelece convenções amplamente aceitas para e
 
 A justificativa do trabalho está na integração entre dois tipos complementares de inteligência computacional: a validação determinística, que reduz ambiguidades na identificação de violações de estilo, e o modelo de linguagem, que amplia a utilidade pedagógica do resultado ao explicar causas e correções. O objetivo principal é disponibilizar uma ferramenta de linha de comando que receba código Python de diferentes fontes, execute validação PEP 8 automaticamente e gere um relatório estruturado de revisão. Como objetivo específico, busca-se preservar a privacidade do código analisado por meio de execução local do modelo.
 
+<<<<<<< HEAD
 Este artigo está organizado da seguinte forma: a Seção 2 apresenta a fundamentação teórica e os trabalhos relacionados; a Seção 3 descreve metodologia, dataset e resultados esperados; a Seção 4 discute resultados obtidos e aspectos éticos; a Seção 5 sintetiza as conclusões; e a Seção 6 lista as referências bibliográficas.
+=======
+\subsection{Objetivos}
+
+O presente trabalho tem como objetivo principal o desenvolvimento de um agente de inteligência artificial integrado que ajude desenvolvedores Python a validarem a conformidade de seus programas com boas práticas de programação utilizadas no mercado. Para isso, o agente valida a conformidade do código com as regras da PEP 8 para avaliar se eles as cumprem ou não.
+
+\subsection{Opção do projeto}
+
+O projeto foi desenvolvido alinhado com a **Opção LLM12** (Empregar grandes modelos de linguagem para implementar uma solução de análise de dados de negócio ou algo similar). Neste contexto, a IA atua na "análise de negócio" voltada ao desenvolvimento de software, processando artefatos de código-fonte como dados de entrada para identificar padrões, apontar infrações de qualidade (PEP 8) e gerar feedback fundamentado, assemelhando-se à revisão automatizada de documentos técnicos.
+
+\subsection{Justificativa}
+
+A automação da revisão de código por meio de modelos de inteligência artificial representa uma aplicação direta dos conceitos abordados na disciplina, alinhando teoria e prática de forma concreta. A ferramenta desenvolvida caracteriza-se como um agente inteligente, uma vez que percebe o ambiente por meio dos parâmetros de entrada recebidos em tempo de execução --- o código a ser avaliado --- e age sobre esse ambiente ao produzir sugestões de melhoria fundamentadas nos critérios definidos no prompt.
+
+A escolha do Llama como modelo base justifica-se pela simplicidade de integração proporcionada pela biblioteca \texttt{ollama}, que disponibiliza uma interface de uso gratuito, viabilizando o desenvolvimento do projeto sem custos adicionais. Outro fator relevante é a possibilidade de execução local do modelo: por operar em ambiente controlado, a ferramenta não transmite o código analisado a servidores externos, o que elimina preocupações relacionadas à confidencialidade do código-fonte avaliado.
+
+\subsection{Descrição do Projeto}
+
+A partir dos conceitos apresentados na seção 2.1, é possível implementar um agente inteligente que, utilizando-se de uma LLM em conjunto com ferramentas de análise estática, é capaz de avaliar código Python sob demanda de um usuário, identificando violações de conformidade com a PEP 8 e gerando sugestões de correção fundamentadas.
+
+Nessa implementação, o agente é acionado via linha de comando pelo usuário, que deve indicar a fonte do código a ser avaliado por meio de um dos três modos disponíveis: arquivo (\texttt{-f}), diretório (\texttt{-d}) ou Github (\texttt{-g}). O sistema aceita exclusivamente arquivos Python (\texttt{.py}). As respostas da IA são gravadas em um arquivo em formato MarkDown, de forma que é gerado um relatório intuitivo e completo do código avaliado, explicando cada apontamento encontrado e sugerindo melhorias. Além disso, o usuário pode ativar a flag \texttt{--verbose} para incluir o conteúdo de cada arquivo analisado na saída do programa no terminal.
+
+Antes do envio à LLM, cada arquivo é submetido a uma camada de validação automática utilizando a biblioteca \texttt{pycodestyle}, que verifica a conformidade do código com as regras da PEP 8 --- o guia de estilo oficial da linguagem Python. As violações encontradas (código do erro, linha, coluna e descrição) são estruturadas e enviadas ao modelo juntamente com o código-fonte, para que a LLM gere um feedback didático contendo explicações sobre cada violação e sugestões de correção.
+
+No modo \texttt{-f}, o programa recebe como entrada um ou mais arquivos Python diretamente pela linha de comando. Os arquivos são lidos e organizados em um dicionário estruturado, no qual cada nome de arquivo é associado ao seu respectivo conteúdo.
+
+No modo \texttt{-d}, o usuário informa o caminho de uma pasta local. O programa percorre a pasta recursivamente, identificando todos os arquivos com extensão \texttt{.py} e ignorando diretórios comuns que não contêm código relevante, como \texttt{\_\_pycache\_\_}, \texttt{.venv}, \texttt{.git}, entre outros definidos no arquivo \texttt{config.py}.
+
+No modo \texttt{-g}, o usuário fornece pela linha de comando o link de um repositório público do GitHub. Nessa modalidade, o programa coleta os arquivos Python do repositório, filtrando apenas aqueles com extensão \texttt{.py}, e os submete ao mesmo pipeline de validação PEP 8 e análise pela LLM.
+
+Em todos os modos, o fluxo de análise é o mesmo: leitura do código, validação PEP 8 com \texttt{pycodestyle}, construção do prompt com código-fonte e violações encontradas, envio ao modelo Llama via \texttt{ollama} e geração do relatório de feedback.
+>>>>>>> 9f3481d70cf2b28a6f3a46db5e9aad1f694de3a3
 
 \section{Fundamentação Teórica}
 
@@ -163,7 +195,28 @@ Vídeo no YouTube: link em produção para a entrega final da etapa 2.
 
 O projeto demonstrou que a combinação entre análise estática com \texttt{pycodestyle} e geração de explicações por LLM é uma estratégia viável para revisão automática de código Python orientada ao aprendizado. O componente determinístico garante rastreabilidade das violações, enquanto o componente gerativo amplia a utilidade pedagógica do resultado.
 
+<<<<<<< HEAD
 Os resultados obtidos no dataset de avaliação indicam que o objetivo principal foi alcançado: construir um agente capaz de revisar código Python com base em boas práticas, mantendo consistência com as regras da PEP 8 e fornecendo feedback compreensível. Como contribuição, a solução oferece um pipeline reprodutível, extensível e alinhado a requisitos de privacidade, com potencial de aplicação em disciplinas introdutórias de programação.
+=======
+\begin{itemize}
+  \item \textbf{Explicações didáticas:} cada categoria de violação foi acompanhada de uma explicação sobre a regra PEP 8 violada e por que a conformidade é importante.
+  \item \textbf{Exemplos de correção:} o modelo apresentou trechos de código com o padrão incorreto e o padrão correto lado a lado, utilizando marcadores visuais (\texttt{Errado} / \texttt{Correto}).
+  \item \textbf{Sugestões adicionais:} para todos os 25 arquivos --- incluindo os sem violações --- o modelo forneceu sugestões de melhoria que vão além do escopo do \texttt{pycodestyle}, como o uso de \textit{type hints}, \texttt{@dataclass}, módulos da biblioteca padrão e ferramentas de formatação automática como \texttt{black} e \texttt{ruff}.
+  \item \textbf{Observação além do pycodestyle:} no arquivo \texttt{04\_pessoa.py}, o modelo identificou que a classe \texttt{pessoa} foi declarada com inicial minúscula, violando a convenção PascalCase da PEP 8 para nomes de classes --- uma violação legítima que o \texttt{pycodestyle} não verifica, demonstrando a capacidade do modelo de complementar a análise estática.
+\end{itemize}
+
+\subsubsection{Inconsistências encontradas}
+
+Apesar do desempenho quantitativo perfeito na detecção de violações, o relatório do modelo apresentou uma inconsistência textual no resumo final: o parágrafo de conclusão afirma que houve ``10 arquivos sem violações e 15 com violações'', quando a própria tabela resumo do relatório mostra corretamente 13 arquivos limpos e 12 com violações. Trata-se de um erro de contagem na geração do texto resumo, sem impacto sobre a análise individual de cada arquivo.
+
+\subsubsection{Conclusão dos resultados}
+
+Os resultados obtidos demonstram que a combinação da validação automática do \texttt{pycodestyle} com a geração de feedback pelo modelo Llama produziu um relatório com detecção precisa e feedback didático de alta qualidade. O modelo reproduziu fielmente as 217 violações identificadas pela ferramenta de análise estática, categorizou corretamente todos os tipos de erro e foi capaz de acrescentar observações pertinentes que extrapolam o escopo do \texttt{pycodestyle}. A única limitação observada foi um erro aritmético no resumo textual gerado pelo modelo, que não comprometeu a qualidade das análises individuais.
+
+\subsection{Endereço GitHub}
+
+Todos os artefatos parciais gerados, juntamente com o texto do relato e os códigos e notebooks de análise exploratória, encontram-se centralizados publicamente e disponíveis no repositório do projeto: \href{https://github.com/vinicius-cappatti/avaliador-boas-praticas}{avaliador-boas-praticas}.
+>>>>>>> 9f3481d70cf2b28a6f3a46db5e9aad1f694de3a3
 
 \section{Referências bibliográficas}
 
