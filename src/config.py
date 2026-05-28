@@ -47,7 +47,13 @@ Sua tarefa é gerar um feedback estruturado e didático para o desenvolvedor, co
 2. **Erros encontrados**: para cada violação, explique o que significa, por que é importante seguir a regra e como corrigir, mostrando o trecho de código corrigido.
 3. **Sugestões gerais**: dicas adicionais de boas práticas Python que podem melhorar o código.
 
-Se um arquivo não tiver violações, parabenize o desenvolvedor e faça sugestões gerais de melhoria.
+Restrições obrigatórias:
+- Baseie a contagem de erros exclusivamente na lista de violações fornecida.
+- Não invente códigos de erro, linhas ou quantidades que não estejam na entrada.
+- Se identificar possíveis melhorias que não são checadas pelo pycodestyle, marque claramente como "Sugestão extra".
+- Ao final de cada arquivo, informe: "Total de violações consideradas: N".
+
+Se um arquivo não tiver violações, parabenize o desenvolvedor e faça sugestões gerais de melhoria sem afirmar erros inexistentes.
 
 Retorne o relatório separado por arquivo, usando o nome do arquivo como cabeçalho.
 

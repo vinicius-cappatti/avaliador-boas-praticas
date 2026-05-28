@@ -28,34 +28,46 @@ def validar_pep8_conteudo(nome_arquivo: str, conteudo: str) -> list[dict]:
 
     violacoes = []
     try:
-        coletor = _ColetorErros()
-        guia = pycodestyle.StyleGuide(parse_argv=False, reporter=type(coletor))
-        guia.options.report = coletor
-        guia.check_files([tmp_path])
-        violacoes = coletor.erros
+        guia = pycodestyle.StyleGuide(
+            parse_argv=False,
+            reporter=_ColetorErros,
+            quiet=True,
+        )
+        relatorio = guia.check_files([tmp_path])
+
+        # O relatório customizado expõe os erros coletados para consumo no pipeline.
+        if hasattr(relatorio, "erros"):
+            violacoes = relatorio.erros
+
+        violacoes.sort(key=lambda v: (v["linha"], v["coluna"], v["codigo"]))
     finally:
-        os.unlink(tmp_path)
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
 
     return violacoes
 
 
-class _ColetorErros(pycodestyle.StandardReport):
+class _ColetorErros(pycodestyle.BaseReport):
     """Reporter customizado que coleta os erros em uma lista de dicionários."""
 
     def __init__(self, options=None):
         if options is None:
-            options = pycodestyle.StyleGuide(parse_argv=False).options
+            options = pycodestyle.StyleGuide(parse_argv=False, quiet=True).options
         super().__init__(options)
         self.erros = []
 
     def error(self, line_number, offset, text, check):
         code = super().error(line_number, offset, text, check)
         if code:
+            mensagem = text
+            if text.startswith(f"{code} "):
+                mensagem = text[len(code) + 1 :]
+
             self.erros.append({
                 "linha": line_number,
                 "coluna": offset + 1,
                 "codigo": code,
-                "mensagem": text,
+                "mensagem": mensagem,
             })
         return code
 

@@ -111,6 +111,15 @@ def formatar_arquivos_com_pep8(arquivos: dict[str, str], resultados_pep8: dict[s
             resultado += f"\n**Violações PEP 8 encontradas ({len(violacoes)}):**\n"
             for v in violacoes:
                 resultado += f"- Linha {v['linha']}, Coluna {v['coluna']}: [{v['codigo']}] {v['mensagem']}\n"
+
+            categorias = {}
+            for v in violacoes:
+                codigo = v["codigo"]
+                categorias[codigo] = categorias.get(codigo, 0) + 1
+
+            resultado += "\n**Resumo por categoria:**\n"
+            for codigo, qtd in sorted(categorias.items()):
+                resultado += f"- {codigo}: {qtd}\n"
         else:
             resultado += "\n**Violações PEP 8 encontradas:** Nenhuma violação.\n"
 
