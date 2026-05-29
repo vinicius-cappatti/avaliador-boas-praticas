@@ -28,7 +28,7 @@ Fluxo de análise:
 - Exemplo de resposta da LLM: `tests/resposta_llama/resposta_llama.md`
 - Notebook de análise exploratória: `src/analise_exploratoria.ipynb`
 - Código-fonte do agente: `src/`
-- Vídeo demonstrativo: 
+- Vídeo demonstrativo: https://youtu.be/LQoXol4eoLA
 
 ## Estrutura do Projeto
 
