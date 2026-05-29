@@ -13,28 +13,28 @@ Este documento contém o relatório de violações PEP 8 identificadas pela ferr
 | 03_listas.py | 0 |
 | 04_pessoa.py | 9 |
 | 05_validacao.py | 0 |
-| 06_matematica.py | 20 |
+| 06_matematica.py | 22 |
 | 07_dicionarios.py | 0 |
 | 08_conta_bancaria.py | 13 |
 | 09_ordenacao.py | 0 |
 | 10_arquivos.py | 15 |
 | 11_temperatura.py | 0 |
-| 12_pilha.py | 8 |
+| 12_pilha.py | 9 |
 | 13_fila.py | 0 |
-| 14_geometria.py | 22 |
+| 14_geometria.py | 25 |
 | 15_busca.py | 0 |
-| 16_tarefas.py | 17 |
+| 16_tarefas.py | 18 |
 | 17_datas.py | 0 |
-| 18_criptografia.py | 18 |
+| 18_criptografia.py | 19 |
 | 19_estatistica.py | 0 |
 | 20_senhas.py | 11 |
 | 21_unidades.py | 0 |
-| 22_inventario.py | 21 |
+| 22_inventario.py | 25 |
 | 23_matrizes.py | 0 |
-| 24_logger.py | 30 |
+| 24_logger.py | 41 |
 | 25_alunos.py | 0 |
 
-**Total de violações: 194**
+**Total de violações: 217**
 
 **Arquivos limpos (sem violações):** 01, 03, 05, 07, 09, 11, 13, 15, 17, 19, 21, 23, 25
 
@@ -109,7 +109,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 06_matematica.py
 
-Total de violações: 20
+Total de violações: 22
 
 - Linha 3, Coluna 1: [E302] expected 2 blank lines, found 0
 - Linha 4, Coluna 9: [E225] missing whitespace around operator
@@ -216,7 +216,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 12_pilha.py
 
-Total de violações: 8
+Total de violações: 9
 
 - Linha 3, Coluna 1: [E302] expected 2 blank lines, found 1
 - Linha 4, Coluna 18: [E201] whitespace after '('
@@ -242,7 +242,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 14_geometria.py
 
-Total de violações: 22
+Total de violações: 25
 
 - Linha 3, Coluna 1: [E302] expected 2 blank lines, found 0
 - Linha 4, Coluna 22: [E231] missing whitespace after ','
@@ -282,7 +282,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 16_tarefas.py
 
-Total de violações: 17
+Total de violações: 18
 
 - Linha 3, Coluna 1: [E302] expected 2 blank lines, found 1
 - Linha 5, Coluna 21: [E225] missing whitespace around operator
@@ -319,7 +319,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 18_criptografia.py
 
-Total de violações: 18
+Total de violações: 19
 
 - Linha 3, Coluna 1: [E302] expected 2 blank lines, found 1
 - Linha 3, Coluna 35: [E231] missing whitespace after ','
@@ -387,7 +387,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 22_inventario.py
 
-Total de violações: 21
+Total de violações: 25
 
 - Linha 3, Coluna 1: [E302] expected 2 blank lines, found 1
 - Linha 4, Coluna 22: [E231] missing whitespace after ',' (3 ocorrências)
@@ -426,7 +426,7 @@ Nenhuma violação PEP 8 encontrada. Código em conformidade.
 
 ### 24_logger.py
 
-Total de violações: 30
+Total de violações: 41
 
 - Linha 4, Coluna 1: [E302] expected 2 blank lines, found 1
 - Linha 5, Coluna 11: [E225] missing whitespace around operator
