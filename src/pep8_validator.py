@@ -6,12 +6,14 @@
 # - Vinicius S. Cappatti (RA: 10418266)
 #
 # SÍNTESE DO ARQUIVO:
-# Módulo responsável por fazer a validação automática PEP 8 utilizando pycodestyle.
+# Módulo responsável por fazer a validação automática PEP 8 utilizando
+# pycodestyle.
 #
 # HISTÓRICO DE ALTERAÇÕES:
 # Data       | Autor       | Breve descrição da atualização
 # ------------------------------------------------------------------------------
 # 02/04/2026 | Equipe      | Adição de cabeçalho padronizado e adequação N1.
+# 28/05/2026 | Equipe      | Ajustes de conformidade PEP 8 e documentação para N2.
 # ==============================================================================
 
 """
@@ -51,7 +53,8 @@ def validar_pep8_conteudo(nome_arquivo: str, conteudo: str) -> list[dict]:
         )
         relatorio = guia.check_files([tmp_path])
 
-        # O relatório customizado expõe os erros coletados para consumo no pipeline.
+        # O relatório customizado expõe os erros coletados para consumo
+        # no pipeline.
         if hasattr(relatorio, "erros"):
             violacoes = relatorio.erros
 
@@ -68,7 +71,9 @@ class _ColetorErros(pycodestyle.BaseReport):
 
     def __init__(self, options=None):
         if options is None:
-            options = pycodestyle.StyleGuide(parse_argv=False, quiet=True).options
+            options = pycodestyle.StyleGuide(
+                parse_argv=False, quiet=True
+            ).options
         super().__init__(options)
         self.erros = []
 
@@ -77,7 +82,7 @@ class _ColetorErros(pycodestyle.BaseReport):
         if code:
             mensagem = text
             if text.startswith(f"{code} "):
-                mensagem = text[len(code) + 1 :]
+                mensagem = text[len(code) + 1:]
 
             self.erros.append({
                 "linha": line_number,
@@ -93,10 +98,12 @@ def validar_arquivos(conteudos: dict[str, str]) -> dict[str, list[dict]]:
     Valida múltiplos arquivos Python contra as regras PEP 8.
 
     Args:
-        conteudos: Dicionário com nome do arquivo como chave e conteúdo como valor.
+        conteudos: Dicionário com nome do arquivo como chave e
+                   conteúdo como valor.
 
     Returns:
-        Dicionário com nome do arquivo como chave e lista de violações como valor.
+        Dicionário com nome do arquivo como chave e lista de
+        violações como valor.
     """
     resultados = {}
     for nome, conteudo in conteudos.items():
@@ -123,6 +130,7 @@ def formatar_resultado_pep8(nome_arquivo: str, violacoes: list[dict]) -> str:
     linhas = [f"Total de violações: {len(violacoes)}"]
     for v in violacoes:
         linhas.append(
-            f"  Linha {v['linha']}, Coluna {v['coluna']}: [{v['codigo']}] {v['mensagem']}"
+            f"  Linha {v['linha']}, Coluna {v['coluna']}: "
+            f"[{v['codigo']}] {v['mensagem']}"
         )
     return "\n".join(linhas)
