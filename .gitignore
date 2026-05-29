@@ -1,3 +1,31 @@
+# Ignore LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.synctex.gz
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.idx
+*.ilg
+*.ind
+
+# Exported documents / binaries
+*.pdf
+*.odt
+*.doc
+*.docx
+
+# Template previews and generated images
+Template_SBC/template-openoffice_stw_*.jpg
+Template_SBC/template-openoffice_stw_*.png
+
+# Specific build outputs (explicit)
+relatorio.aux
+relatorio.pdf
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

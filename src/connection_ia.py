@@ -6,7 +6,7 @@
 # - Vinicius S. Cappatti (RA: 10418266)
 #
 # SÍNTESE DO ARQUIVO:
-# Camada de abraçarão simples para interface com as requisições à
+# Camada de abstração simples para interface com as requisições à
 # Inteligência Artificial.
 #
 # HISTÓRICO DE ALTERAÇÕES:
