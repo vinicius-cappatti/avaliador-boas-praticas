@@ -12,6 +12,7 @@
 # Data       | Autor       | Breve descrição da atualização
 # ------------------------------------------------------------------------------
 # 02/04/2026 | Equipe      | Adição de cabeçalho padronizado e adequação N1.
+# 28/05/2026 | Equipe      | Ajustes de conformidade PEP 8 e documentação para N2.
 # ==============================================================================
 
 import argparse
@@ -23,10 +24,10 @@ from config import EXTENSOES_CODIGO, PASTAS_IGNORADAS
 def ler_arquivo(caminho: str) -> str:
     """
     Lê o conteúdo de um arquivo e retorna como string.
-    
+
     Args:
         caminho: Caminho do arquivo a ser lido.
-        
+
     Returns:
         Conteúdo do arquivo como string.
     """
@@ -47,10 +48,10 @@ def ler_arquivo(caminho: str) -> str:
 def ler_multiplos_arquivos(caminhos: list[str]) -> dict[str, str]:
     """
     Lê múltiplos arquivos e retorna um dicionário com seus conteúdos.
-    
+
     Args:
         caminhos: Lista de caminhos dos arquivos.
-        
+
     Returns:
         Dicionário onde a chave é o nome do arquivo e o valor é seu conteúdo.
     """
@@ -60,6 +61,7 @@ def ler_multiplos_arquivos(caminhos: list[str]) -> dict[str, str]:
         conteudos[nome_arquivo] = ler_arquivo(caminho)
     return conteudos
 
+
 def ler_arquivos_pasta(caminho_pasta: str) -> dict[str, str]:
     """
     Lê recursivamente todos os arquivos de código dentro de uma pasta.
@@ -68,7 +70,8 @@ def ler_arquivos_pasta(caminho_pasta: str) -> dict[str, str]:
         caminho_pasta: Caminho da pasta a ser lida.
 
     Returns:
-        Dicionário onde a chave é o caminho relativo do arquivo e o valor é seu conteúdo.
+        Dicionário onde a chave é o caminho relativo do arquivo e o
+        valor é seu conteúdo.
     """
     pasta = Path(caminho_pasta)
     if not pasta.is_dir():
@@ -81,7 +84,8 @@ def ler_arquivos_pasta(caminho_pasta: str) -> dict[str, str]:
             continue
         if arquivo.suffix.lower() not in EXTENSOES_CODIGO:
             continue
-        if any(parte in PASTAS_IGNORADAS for parte in arquivo.relative_to(pasta).parts):
+        partes_rel = arquivo.relative_to(pasta).parts
+        if any(parte in PASTAS_IGNORADAS for parte in partes_rel):
             continue
         caminho_relativo = str(arquivo.relative_to(pasta))
         conteudo = ler_arquivo(str(arquivo))
@@ -92,10 +96,12 @@ def ler_arquivos_pasta(caminho_pasta: str) -> dict[str, str]:
 
 def formatar_arquivos(arquivos: dict) -> str:
     """
-    Formata os arquivos para o prompt, incluindo o nome do arquivo e seu conteúdo.
+    Formata os arquivos para o prompt, incluindo o nome do arquivo e
+    seu conteúdo.
     Args:
-        arquivos: Dicionário onde a chave é o nome do arquivo e o valor é seu conteúdo.
-        
+        arquivos: Dicionário onde a chave é o nome do arquivo e o valor
+                  é seu conteúdo.
+
     Returns:
         String formatada para o prompt.
     """
@@ -106,13 +112,18 @@ def formatar_arquivos(arquivos: dict) -> str:
     return resultado
 
 
-def formatar_arquivos_com_pep8(arquivos: dict[str, str], resultados_pep8: dict[str, list[dict]]) -> str:
+def formatar_arquivos_com_pep8(
+    arquivos: dict[str, str],
+    resultados_pep8: dict[str, list[dict]]
+) -> str:
     """
-    Formata os arquivos junto com os resultados da validação PEP 8 para o prompt da LLM.
+    Formata os arquivos junto com os resultados da validação PEP 8 para
+    o prompt da LLM.
 
     Args:
         arquivos: Dicionário com nome do arquivo e conteúdo.
-        resultados_pep8: Dicionário com nome do arquivo e lista de violações PEP 8.
+        resultados_pep8: Dicionário com nome do arquivo e lista de
+                         violações PEP 8.
 
     Returns:
         String formatada contendo código-fonte e violações para cada arquivo.
@@ -124,9 +135,15 @@ def formatar_arquivos_com_pep8(arquivos: dict[str, str], resultados_pep8: dict[s
         resultado += f"\n**Código-fonte:**\n```python\n{conteudo}\n```\n"
 
         if violacoes:
-            resultado += f"\n**Violações PEP 8 encontradas ({len(violacoes)}):**\n"
+            n_violacoes = len(violacoes)
+            resultado += (
+                f"\n**Violações PEP 8 encontradas ({n_violacoes}):**\n"
+            )
             for v in violacoes:
-                resultado += f"- Linha {v['linha']}, Coluna {v['coluna']}: [{v['codigo']}] {v['mensagem']}\n"
+                resultado += (
+                    f"- Linha {v['linha']}, Coluna {v['coluna']}: "
+                    f"[{v['codigo']}] {v['mensagem']}\n"
+                )
 
             categorias = {}
             for v in violacoes:
@@ -137,6 +154,8 @@ def formatar_arquivos_com_pep8(arquivos: dict[str, str], resultados_pep8: dict[s
             for codigo, qtd in sorted(categorias.items()):
                 resultado += f"- {codigo}: {qtd}\n"
         else:
-            resultado += "\n**Violações PEP 8 encontradas:** Nenhuma violação.\n"
+            resultado += (
+                "\n**Violações PEP 8 encontradas:** Nenhuma violação.\n"
+            )
 
     return resultado
