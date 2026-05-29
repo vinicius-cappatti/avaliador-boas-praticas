@@ -12,10 +12,12 @@
 # Data       | Autor       | Breve descrição da atualização
 # ------------------------------------------------------------------------------
 # 02/04/2026 | Equipe      | Adição de cabeçalho padronizado e adequação N1.
+# 28/05/2026 | Equipe      | Ajustes de conformidade PEP 8 e documentação para N2.
 # ==============================================================================
 
 import ollama
 from config import OLLAMA_MODEL
+
 
 def enviar_para_ollama(prompt: str) -> str:
     """
