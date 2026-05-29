@@ -13,7 +13,7 @@
 # Data       | Autor       | Breve descrição da atualização
 # ------------------------------------------------------------------------------
 # 02/04/2026 | Equipe      | Adição de cabeçalho padronizado e adequação N1.
-# 28/05/2026 | Equipe      | Ajustes de conformidade PEP 8 e documentação para N2.
+# 28/05/2026 | Equipe      | Ajustes PEP 8 e documentação para N2.
 # ==============================================================================
 
 OLLAMA_MODEL = "minimax-m2.7:cloud"
