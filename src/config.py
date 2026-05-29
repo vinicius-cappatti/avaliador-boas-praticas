@@ -16,7 +16,7 @@
 # 28/05/2026 | Equipe      | Ajustes PEP 8 e documentação para N2.
 # ==============================================================================
 
-OLLAMA_MODEL = "minimax-m2.7:cloud"
+OLLAMA_MODEL = "llama3.1"
 
 # Extensões de arquivos de código fonte reconhecidas (somente Python)
 EXTENSOES_CODIGO = [

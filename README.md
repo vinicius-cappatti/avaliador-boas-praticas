@@ -19,6 +19,17 @@ Fluxo de análise:
 3. As violações encontradas + código-fonte são enviados à LLM
 4. A LLM gera um feedback estruturado com explicações e sugestões de correção
 
+## Artefatos da Entrega N2
+
+- Relatório final em LaTeX/PDF: `relatorio.tex` e `relatorio.pdf`
+- Dataset controlado: `tests/arquivospy/`
+- Descrição do dataset: `tests/dataset.md`
+- Gabarito de referência: `tests/gabarito/gabarito.md`
+- Exemplo de resposta da LLM: `tests/resposta_llama/resposta_llama.md`
+- Notebook de análise exploratória: `src/analise_exploratoria.ipynb`
+- Código-fonte do agente: `src/`
+- Vídeo demonstrativo: inserir o link público do YouTube antes da entrega final
+
 ## Estrutura do Projeto
 
 ```
@@ -30,7 +41,15 @@ avaliador-boas-praticas/
 │   ├── pep8_validator.py    # Validação PEP 8 com pycodestyle
 │   ├── connection_ia.py     # Camada de abstração para a IA
 │   ├── connection_ollama.py # Conexão com o modelo via Ollama
-│   └── github_utils.py      # Integração com a API do GitHub
+│   ├── github_utils.py      # Integração com a API do GitHub
+│   └── analise_exploratoria.ipynb
+├── tests/
+│   ├── arquivospy/          # Dataset controlado com 25 arquivos Python
+│   ├── dataset.md           # Descrição do dataset
+│   ├── gabarito/            # Gabarito de violações esperadas
+│   └── resposta_llama/      # Exemplo de relatório gerado
+├── relatorio.tex            # Fonte LaTeX do artigo
+├── relatorio.pdf            # Artigo final compilado
 ├── requirements.txt         # Dependências do projeto
 ├── .gitignore
 └── README.md
@@ -57,20 +76,27 @@ avaliador-boas-praticas/
 ollama --version
 ```
 
-### 2. Baixar o Modelo
+### 2. Configurar o Modelo
 
-O projeto utiliza o modelo `minimax-m2.7:cloud` por padrão (configurável em `src/config.py`). Para baixá-lo, execute:
+O projeto utiliza por padrão `llama3.1`, definido em `src/config.py` pela
+variável `OLLAMA_MODEL`. O valor pode ser alterado conforme os modelos
+disponíveis no ambiente de execução.
+
+Quando o nome do modelo contém `cloud`, o processamento pode envolver serviço
+remoto. Para cenários que exigem privacidade do código analisado, recomenda-se
+configurar um modelo local no Ollama e informar essa escolha no relatório ou na
+apresentação.
+
+Para baixar um modelo local, execute por exemplo:
 
 ```bash
-ollama pull minimax-m2.7:cloud
+ollama pull llama3.1
 ```
-
-> **Nota:** O modelo será baixado localmente. Certifique-se de ter espaço em disco suficiente.
 
 Para usar um modelo diferente, altere a variável `OLLAMA_MODEL` em `src/config.py`:
 
 ```python
-OLLAMA_MODEL = "nome-do-modelo"
+OLLAMA_MODEL = "llama3.1"
 ```
 
 Você pode listar os modelos disponíveis com `ollama list` e ver todos os modelos no [catálogo do Ollama](https://ollama.com/library).
@@ -169,7 +195,7 @@ python main.py -g https://github.com/usuario/projeto -v
 - Confirme que o serviço está acessível em `http://localhost:11434`
 
 ### Erro: modelo não encontrado
-- Certifique-se de ter baixado o modelo com `ollama pull minimax-m2.7:cloud`
+- Certifique-se de ter baixado o modelo configurado, por exemplo `ollama pull llama3.1`
 - Verifique os modelos instalados com `ollama list`
 
 ### Erro: "Import could not be resolved"

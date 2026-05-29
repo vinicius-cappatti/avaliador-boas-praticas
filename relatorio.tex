@@ -1,13 +1,14 @@
 \documentclass[12pt]{article}
 
-\usepackage{Template_SBC/template-latex/sbc-template}
-\usepackage{graphicx,url}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[brazil]{babel}
+\usepackage[brazilian]{babel}
+\usepackage{Template_SBC/template-latex/sbc-template}
+\usepackage{graphicx,url}
 \usepackage{array}
 \usepackage{booktabs}
-
+\usepackage[section]{placeins}
+\usepackage[hidelinks]{hyperref}
 % Match the SBC sample PDF, which uses PDF base fonts instead of embedded Nimbus.
 \pdfmapline{=ptmr8r Times-Roman 34 "TeXBase1Encoding ReEncodeFont" <8r.enc}
 \pdfmapline{=ptmb8r Times-Bold 262178 "TeXBase1Encoding ReEncodeFont" <8r.enc}
@@ -24,7 +25,7 @@
 \sloppy
 \renewcommand{\refname}{Referências}
 
-\title{Agente de IA para revisão de código\\ baseado em boas práticas de programação}
+\title{Agente de IA para feedback didático de código Python\\ com base na PEP 8}
 
 \author{Felipe U. G. de Sousa\inst{1}, Gustavo N. Siqueira\inst{1},
 Thomaz de S. Scopel\inst{1}, Vinicius S. Cappatti\inst{1}}
@@ -38,29 +39,30 @@ Rua da Consolação, 930 -- São Paulo, SP -- Brasil
 \maketitle
 
 \begin{abstract}
-This paper presents an artificial intelligence agent for Python code review
-based on programming best practices. The solution combines deterministic static
-analysis with pycodestyle and natural-language feedback generation
-through a language model accessed by Ollama. The implemented pipeline
-supports local files, local directories, and public GitHub repositories. In a
-25-file evaluation dataset, the deterministic stage found 217 PEP 8 violations
-in 12 files, while 13 files had no violations. Results indicate that grounding
-the model response in static-analysis evidence improves traceability and makes
-the generated feedback more useful for programming education.
+This paper presents an artificial intelligence agent for didactic feedback on
+Python code style and readability based on PEP 8. The solution combines
+deterministic static analysis with pycodestyle and natural-language feedback
+generation through a language model accessed by Ollama. The implemented
+pipeline supports local files, local directories, and public GitHub
+repositories. In an original controlled dataset with 25 Python files, the
+deterministic stage found 217 PEP 8 violations in 12 files, while 13 files had
+no violations. Results suggest that grounding model responses in static-analysis
+evidence improves traceability and may make feedback more understandable in
+programming education contexts.
 \end{abstract}
 
 \begin{resumo}
-Este artigo apresenta um agente de inteligência artificial para revisão de
-código Python baseado em boas práticas de programação. A solução combina análise
-estática determinística com pycodestyle e geração de feedback em
-linguagem natural por meio de um modelo de linguagem acessado via
-Ollama. O pipeline implementado aceita arquivos locais, diretórios
-locais e repositórios públicos do GitHub. Em uma base de avaliação com 25
-arquivos, a etapa determinística identificou 217 violações PEP 8 em 12 arquivos,
-enquanto 13 arquivos não apresentaram violações. Os resultados indicam que
-ancorar a resposta do modelo em evidências de análise estática aumenta a
-rastreabilidade e torna o feedback mais útil em contextos de aprendizagem de
-programação.
+Este artigo apresenta um agente de inteligência artificial para feedback
+didático sobre estilo e legibilidade de código Python com base na PEP 8. A
+solução combina análise estática determinística com pycodestyle e geração de
+feedback em linguagem natural por meio de um modelo de linguagem acessado via
+Ollama. O pipeline implementado aceita arquivos locais, diretórios locais e
+repositórios públicos do GitHub. Em uma base original e controlada com 25
+arquivos Python, a etapa determinística identificou 217 violações PEP 8 em 12
+arquivos, enquanto 13 arquivos não apresentaram violações. Os resultados sugerem
+que ancorar a resposta do modelo em evidências de análise estática aumenta a
+rastreabilidade e pode tornar o feedback mais compreensível em contextos de
+aprendizagem de programação.
 \end{resumo}
 
 \section{Introdução}
@@ -71,10 +73,12 @@ de defeitos. Em equipes profissionais, revisões ajudam a compartilhar
 conhecimento e a detectar problemas antes da integração ao projeto. Em ambientes
 educacionais, entretanto, a revisão manual contínua costuma ser limitada pelo
 número de estudantes, pelo tempo disponível dos professores e pela dificuldade
-de oferecer retorno individualizado em ciclos curtos. Como consequência,
-estudantes iniciantes podem manter vícios de formatação, nomenclatura e
-organização mesmo quando seus programas apresentam comportamento funcionalmente
-correto.
+de oferecer retorno individualizado em ciclos curtos. O problema real tratado
+neste projeto é a dificuldade de fornecer feedback rápido, individualizado e
+compreensível para estudantes de programação sobre qualidade, estilo e
+legibilidade de código. Como consequência, estudantes iniciantes podem manter
+vícios de formatação, nomenclatura e organização mesmo quando seus programas
+apresentam comportamento funcionalmente correto.
 
 No caso da linguagem Python, a PEP 8 define convenções amplamente adotadas para
 organização visual, espaçamento, nomenclatura e estilo de código
@@ -88,21 +92,22 @@ dificultar seu uso por estudantes que ainda não dominam a terminologia das
 regras PEP 8.
 
 O problema de pesquisa abordado neste trabalho é, portanto, como transformar
-violações objetivas de estilo em feedback compreensível, rastreável e útil para
-aprendizes de programação. A contribuição proposta consiste em um agente de IA
-que combina a precisão de um validador estático com a capacidade explicativa de
-um modelo de linguagem. Nessa arquitetura, o pycodestyle atua como
-fonte determinística das violações, enquanto o modelo de linguagem organiza as
-informações em um relatório didático com explicações e sugestões de correção.
+violações objetivas de estilo em feedback compreensível, rastreável e
+pedagogicamente aproveitável para aprendizes de programação. A contribuição
+proposta consiste em um agente de IA que combina a precisão de um validador
+estático com a capacidade explicativa de um modelo de linguagem. Nessa
+arquitetura, o pycodestyle atua como fonte determinística das violações,
+enquanto o modelo de linguagem organiza as informações em um relatório didático
+com explicações e sugestões de correção.
 
 O objetivo geral do projeto é desenvolver uma ferramenta de linha de comando
-capaz de revisar código Python com base em boas práticas de programação. Como
+capaz de revisar estilo e legibilidade de código Python com base na PEP 8. Como
 objetivos específicos, busca-se: receber código-fonte a partir de arquivos,
 diretórios ou repositórios públicos do GitHub; validar automaticamente a
 aderência às regras PEP 8; estruturar os resultados por arquivo, linha, coluna e
-categoria; gerar feedback em linguagem natural; e registrar métricas que
-permitam avaliar a consistência entre a saída determinística e o texto produzido
-pela IA.
+categoria; gerar feedback em linguagem natural; registrar métricas que permitam
+avaliar a consistência entre a saída determinística e o texto produzido pela IA;
+e disponibilizar os artefatos do projeto em repositório público.
 
 A justificativa do trabalho está no uso complementar de abordagens simbólicas e
 generativas. A análise estática oferece auditabilidade e reduz ambiguidades,
@@ -234,7 +239,7 @@ Este trabalho & Revisão didática de código Python & pycodestyle como fonte de
 \end{tabular}
 \end{table}
 
-\section{Metodologia e Resultados Esperados}
+\section{Metodologia, Dataset e Planejamento de Avaliação}
 
 \subsection{Escopo e arquitetura da solução}
 
@@ -255,6 +260,33 @@ montagem do prompt; e geração do relatório via Ollama. O Ollama
 de chamada de chat \cite{ollama2026docs}. O modelo não foi treinado ou ajustado
 com dados próprios neste estágio; ele atua como gerador condicionado pelo
 conteúdo do código e pela lista de violações calculada previamente.
+
+\begin{figure}[ht]
+\centering
+\fbox{\begin{tabular}{c}
+Entrada do código Python\\
+v\\
+Coleta e filtragem de arquivos .py\\
+v\\
+Análise estática com pycodestyle\\
+v\\
+Estruturação das violações por arquivo, linha, coluna e código\\
+v\\
+Prompt com evidências determinísticas\\
+v\\
+LLM via Ollama\\
+v\\
+Relatório Markdown com feedback didático
+\end{tabular}}
+\caption{Pipeline de processamento do agente}
+\label{fig:pipeline}
+\end{figure}
+
+A Figura~\ref{fig:pipeline} resume a arquitetura. O aspecto central é que a LLM
+não é usada para descobrir livremente os problemas do código, mas para explicar
+diagnósticos previamente obtidos por uma ferramenta determinística. Essa decisão
+aproxima a solução de um agente orientado por ferramenta e reduz o risco de
+feedback sem evidência.
 
 \subsection{Pipeline de processamento}
 
@@ -289,12 +321,16 @@ determinístico.
 \subsection{Dataset e análise exploratória}
 
 O conjunto de avaliação contém 25 arquivos Python armazenados em
-\texttt{tests/arquivospy}. Os arquivos simulam exercícios introdutórios, como
+\texttt{tests/arquivospy}. Trata-se de uma base original e controlada construída
+pelo grupo para simular códigos de estudantes iniciantes em exercícios de
+programação. Os arquivos cobrem temas comuns de disciplinas introdutórias, como
 calculadora, manipulação de strings, listas, classes simples, pilha, fila,
 geometria, datas, criptografia, senhas, matrizes e cadastro de alunos. O
-dataset foi construído para conter arquivos pares com violações intencionais e
+dataset foi estruturado para conter arquivos pares com violações intencionais e
 arquivos ímpares sem violações, gerando um cenário controlado para avaliar
-detecção e explicação de erros.
+detecção e explicação de erros. Essa estratégia não substitui uma base real de
+submissões de estudantes, mas permite verificar o comportamento do agente em
+casos conhecidos, reprodutíveis e alinhados ao problema educacional tratado.
 
 A análise exploratória mostrou que 13 arquivos não apresentaram violações e 12
 arquivos concentraram todos os problemas. Foram identificadas 217 violações PEP
@@ -303,7 +339,10 @@ vírgula, com 78 ocorrências, e E225, ausência de espaço ao redor de operador
 com 62 ocorrências. Juntas, essas duas categorias representam aproximadamente
 64,5\% das violações. Esse padrão é coerente com erros de formatação comuns em
 programadores iniciantes, que tendem a escrever expressões e chamadas de função
-corretas do ponto de vista sintático, mas ainda pouco padronizadas.
+corretas do ponto de vista sintático, mas ainda pouco padronizadas. A
+preparação dos dados consistiu em separar arquivos com e sem violações,
+organizar um gabarito esperado, executar o pycodestyle sobre toda a base e
+conferir as contagens globais e por arquivo antes da etapa generativa.
 
 \subsection{Critérios de avaliação}
 
@@ -322,13 +361,44 @@ explicação das violações pertence à etapa generativa e exige inspeção
 qualitativa. Essa separação é importante porque uma resposta textual agradável
 não deve ser confundida com uma análise tecnicamente correta.
 
-\subsection{Resultados esperados e próximas etapas}
+Para tornar a avaliação da etapa generativa mais transparente, foi adotada uma
+rubrica simples de inspeção, apresentada na Tabela~\ref{tab:rubrica}. A rubrica
+foi aplicada pelo grupo sobre o relatório gerado pela LLM, comparando cada
+afirmação relevante com a saída determinística do pycodestyle e com o gabarito
+manual. Essa avaliação ainda não substitui uma validação com estudantes ou
+monitores, mas torna explícitos os critérios usados para julgar a qualidade do
+feedback.
 
-Espera-se que o agente preserve integralmente as violações detectadas pelo
-pycodestyle e produza feedback claro para estudantes. Também se espera
-que a estruturação do prompt reduza inconsistências comuns em respostas
-gerativas, especialmente contagens divergentes e comentários sem base nos dados
-de entrada.
+\begin{table}[ht]
+\centering
+\caption{Rubrica de avaliação do relatório gerado pela LLM}
+\label{tab:rubrica}
+\small
+\begin{tabular}{p{3.2cm}p{5.4cm}p{4.2cm}}
+\toprule
+\textbf{Critério} & \textbf{Pergunta de verificação} & \textbf{Interpretação}\\
+\midrule
+Fidelidade quantitativa & As quantidades por arquivo e por categoria coincidem
+com o pycodestyle? & Mede risco de alucinação numérica.\\
+Cobertura das violações & Todos os códigos detectados aparecem no feedback? &
+Mede completude mínima da explicação.\\
+Rastreabilidade & O texto preserva arquivo, linha, categoria e exemplo de
+correção? & Mede capacidade de auditoria pelo estudante.\\
+Clareza pedagógica & A explicação apresenta causa, impacto e correção em
+linguagem compreensível? & Mede utilidade potencial para aprendizagem.\\
+Separação de escopo & Sugestões fora da PEP 8 são marcadas como extras? &
+Mede transparência entre erro objetivo e recomendação opcional.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Planejamento de evolução}
+
+Como planejamento de evolução, espera-se que o agente preserve integralmente as
+violações detectadas pelo pycodestyle e produza feedback claro para estudantes.
+Também se espera que a estruturação do prompt reduza inconsistências comuns em
+respostas generativas, especialmente contagens divergentes e comentários sem
+base nos dados de entrada.
 
 As próximas etapas previstas são: implementar um avaliador automático que compare
 o relatório da LLM com o gabarito; gerar o resumo global de forma determinística,
@@ -377,24 +447,65 @@ A Tabela~\ref{tab:violacoes} mostra predominância de problemas de espaçamento.
 Isso indica que, no dataset avaliado, a maior parte dos desvios não está ligada
 a construções complexas da linguagem, mas à escrita cotidiana de expressões,
 listas de parâmetros e separação visual de blocos. Do ponto de vista pedagógico,
-esse resultado reforça a utilidade de feedback automatizado: são erros simples,
-recorrentes e facilmente corrigíveis quando apresentados de forma clara.
+esse resultado sugere potencial para uso de feedback automatizado: são erros
+simples, recorrentes e corrigíveis quando apresentados de forma clara.
 
 \subsection{Exemplo de saída e análise qualitativa}
 
-Para um erro E225, por exemplo, o relatório gerado explica que operadores devem
-ser separados por espaços e apresenta uma comparação entre formas incorreta e
-correta, como \texttt{cont=0} e \texttt{cont = 0}. Para erros E201 e E202, o
-relatório explica a remoção de espaços internos em chamadas ou definições, como
-\texttt{func( valor )} para \texttt{func(valor)}. Esse tipo de explicação
-aproxima a saída técnica do linter de uma orientação formativa.
+Para avaliar se a resposta da LLM transforma diagnósticos técnicos em feedback
+compreensível, foi analisado o relatório gerado a partir do dataset. A
+Tabela~\ref{tab:exemplo-saida} apresenta um exemplo real de transformação de um
+diagnóstico do pycodestyle em orientação didática.
+
+\begin{table}[ht]
+\centering
+\caption{Exemplo de transformação de diagnóstico técnico em feedback didático}
+\label{tab:exemplo-saida}
+\small
+\begin{tabular}{p{3.5cm}p{4.5cm}p{4.3cm}}
+\toprule
+\textbf{Evidência do pycodestyle} & \textbf{Explicação gerada} & \textbf{Correção indicada}\\
+\midrule
+\texttt{02\_strings.py}, linha 10, coluna 9, E225 & Operadores devem ser
+separados por espaços para melhorar legibilidade e padronização. &
+\texttt{cont=0} deve ser escrito como \texttt{cont = 0}.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Para erros E201 e E202, o relatório explica a remoção de espaços internos em
+chamadas ou definições, como \texttt{func( valor )} para
+\texttt{func(valor)}. Para E231, a resposta orienta a inserir espaços após
+vírgulas em parâmetros e chamadas, como em \texttt{def f(a,b)} para
+\texttt{def f(a, b)}. Esse tipo de explicação aproxima a saída técnica do
+linter de uma orientação formativa, pois conecta regra, motivo e exemplo de
+correção.
 
 Também foram observadas sugestões extras, como uso de \textit{type hints},
 \texttt{@dataclass}, testes unitários e bibliotecas padrão. Essas sugestões
 podem enriquecer o feedback, mas precisam ser claramente separadas das violações
 PEP 8. Caso contrário, o estudante pode interpretar uma melhoria opcional como
 erro objetivo. Por isso, o prompt foi ajustado para exigir marcação explícita de
-recomendações fora do escopo do pycodestyle.
+recomendações fora do escopo do pycodestyle. Na inspeção qualitativa, essa
+separação passou a ser tratada como critério de responsabilidade, e não apenas
+como escolha de estilo do relatório.
+
+\subsection{Aplicação da rubrica de avaliação}
+
+A aplicação da rubrica mostrou que a etapa determinística apresentou
+consistência quantitativa: as 217 violações foram reproduzidas a partir da
+execução do pycodestyle e conferidas no gabarito. A cobertura de categorias
+também foi preservada, pois os códigos E201, E202, E225, E227, E228, E231, E301,
+E302 e E501 apareceram no material de análise. Quanto à rastreabilidade, o
+relatório gerado manteve a relação entre arquivo, tipo de violação e exemplos
+de correção, o que permite ao estudante localizar o problema no código.
+
+A clareza pedagógica foi observada principalmente nas explicações de erros de
+espaçamento, que representam a maioria das ocorrências do dataset. Ainda assim,
+essa avaliação deve ser interpretada como inspeção qualitativa do grupo, não
+como prova de efetividade educacional. A validação com estudantes, monitores ou
+professores permanece como etapa futura necessária para medir utilidade real,
+tempo de correção, compreensão das regras e satisfação dos usuários.
 
 \subsection{Discussão crítica}
 
@@ -419,10 +530,14 @@ software.
 O uso de IA em revisão de código exige cuidado com privacidade, autoria,
 dependência excessiva e transparência. Como código-fonte pode conter lógica de
 negócio, dados sensíveis ou propriedade intelectual, o projeto foi desenhado
-para funcionar com uma camada de inferência configurável via Ollama. Ao
-utilizar modelos locais, o código analisado permanece no ambiente do usuário.
-Quando modelos remotos ou em nuvem forem configurados, essa condição deve ser
-explicitada aos usuários antes da análise.
+para funcionar com uma camada de inferência configurável via Ollama. No código
+final, o modelo padrão foi definido como uma opção local configurável pelo
+usuário. Quando configurado com modelos locais, o código analisado permanece no
+ambiente do usuário. Caso seja configurado um modelo remoto ou identificado como
+\textit{cloud}, essa condição deve ser informada antes da análise, pois o código
+pode ser processado fora do ambiente local. Essa distinção é importante para que
+estudantes, professores e desenvolvedores saibam quais dados estão sendo
+compartilhados e possam escolher o modelo de execução mais adequado ao contexto.
 
 Também é necessário evitar que o feedback automatizado seja tratado como
 avaliação final e incontestável. A ferramenta deve apoiar estudantes e
@@ -437,26 +552,31 @@ Os artefatos do projeto, incluindo código-fonte, testes, dataset e relatório,
 estão disponíveis no repositório público:
 \url{https://github.com/AvaliadorDeBoasPraticas/avaliador-boas-praticas}.
 
-O vídeo demonstrativo da etapa final está disponível em: \url{https://youtu.be/XXXXXXXXXXX} (link a ser atualizado com a URL final do YouTube).
+O vídeo demonstrativo da etapa final deve ser publicado em canal público do
+YouTube, e seu endereço deve substituir este marcador antes da entrega final:
+\url{https://youtu.be/INSERIR-LINK-FINAL}.
 
 \section{Conclusão}
 
-Este trabalho apresentou um agente de IA para revisão de código Python baseado
-em boas práticas de programação. A solução combina validação determinística com
-pycodestyle e geração de feedback em linguagem natural por meio de um
-modelo acessado via Ollama. A arquitetura proposta permite analisar
+Este trabalho apresentou um agente de IA para feedback didático sobre estilo e
+legibilidade de código Python com base na PEP 8. A solução combina validação
+determinística com pycodestyle e geração de feedback em linguagem natural por
+meio de um modelo acessado via Ollama. A arquitetura proposta permite analisar
 arquivos locais, diretórios e repositórios públicos do GitHub, mantendo uma
 separação clara entre a etapa objetiva de detecção e a etapa generativa de
 explicação.
 
 Os resultados obtidos no dataset de 25 arquivos indicam que o objetivo principal
-foi alcançado. O pipeline identificou 217 violações PEP 8 em 12 arquivos e
-produziu dados suficientes para análise quantitativa e qualitativa. A principal
-contribuição do projeto é mostrar que uma abordagem híbrida pode tornar a saída
-de ferramentas de lint mais acessível para estudantes, preservando
-rastreabilidade técnica. Como evolução, o trabalho deve incorporar avaliação
-automática do relatório gerado, ampliar a base de testes, comparar ferramentas
-de análise estática e validar a utilidade do feedback com usuários reais.
+foi alcançado dentro do escopo definido. O pipeline identificou 217 violações PEP
+8 em 12 arquivos e produziu dados suficientes para análise quantitativa e
+qualitativa. As principais contribuições são: a construção de um agente híbrido
+que separa detecção objetiva e explicação por LLM; a criação de uma base
+controlada para avaliação de erros PEP 8; a definição de critérios para avaliar
+fidelidade e clareza do relatório gerado; e a geração de feedback rastreável
+para apoiar contextos de ensino de programação. Como evolução, o trabalho deve
+incorporar avaliação automática do relatório gerado, ampliar a base de testes,
+comparar ferramentas de análise estática e validar a utilidade do feedback com
+usuários reais.
 
 \begin{thebibliography}{}
 
